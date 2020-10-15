@@ -3,11 +3,12 @@
 //  API Client
 //
 //  Created by Iftekhar on 09/09/20.
-//  Copyright © 2020 iftekhar. All rights reserved.
+//  Copyright © 2020 Iftekhar. All rights reserved.
 //
 
 import UIKit
 
+@available(iOS 13.0, *)
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?

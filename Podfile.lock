@@ -1,0 +1,27 @@
+PODS:
+  - Alamofire (5.2.2)
+  - IQAPIClient (1.0.0):
+    - Alamofire (~> 5)
+  - SwiftLint (0.40.3)
+
+DEPENDENCIES:
+  - IQAPIClient (from `.`)
+  - SwiftLint
+
+SPEC REPOS:
+  trunk:
+    - Alamofire
+    - SwiftLint
+
+EXTERNAL SOURCES:
+  IQAPIClient:
+    :path: "."
+
+SPEC CHECKSUMS:
+  Alamofire: 814429acc853c6c54ff123fc3d2ef66803823ce0
+  IQAPIClient: a9fb5c94814538b7016c21d4ac513922e521df3e
+  SwiftLint: dfd554ff0dff17288ee574814ccdd5cea85d76f7
+
+PODFILE CHECKSUM: b80637ba5c739fa60349e808dcad12c33f40102c
+
+COCOAPODS: 1.9.3
