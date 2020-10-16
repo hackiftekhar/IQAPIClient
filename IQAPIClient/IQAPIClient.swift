@@ -92,58 +92,21 @@ public class IQAPIClient {
 
     private static let haptic = UINotificationFeedbackGenerator()
 
-    @discardableResult public static func sendRequest<T>(path: String, method: HTTPMethod = .get, parameters: Parameters? = nil,
+    //This is used for Decodable model objects
+    @discardableResult public static func sendRequest<T: Decodable>(path: String, method: HTTPMethod = .get, parameters: Parameters? = nil,
                                                          successSound: Bool = false, failedSound: Bool = false, executeErroHandlerOnError: Bool = true,
                                                          completionHandler: @escaping (_ result: Swift.Result<T, NSError>) -> Void) -> DataRequest {
-        return sendRequest(url: baseURL.appendingPathComponent(path), method: method, parameters: parameters) { (originalResponse: AFDataResponse, result: Swift.Result<Any, NSError>) in
+        return sendRequest(url: baseURL.appendingPathComponent(path), method: method, parameters: parameters) { (originalResponse: AFDataResponse, result: Swift.Result<T, NSError>) in
             switch result {
-
             case .success(let response):
-                //Now we are trying to convert the final json to the given object
-                do {
-                    let object: Any?
-                    if let T = T.self as? Decodable.Type {
-                        let data = try JSONSerialization.data(withJSONObject: response, options: [])
-                        object = T.decode(from: data)
-                    } else if let response = response as? T {
-                        object = response
-                    } else {
-                        object = nil
+                OperationQueue.main.addOperation {
+                    if successSound {
+                        haptic.prepare()
+                        haptic.notificationOccurred(.success)
                     }
-
-                    OperationQueue.main.addOperation {
-                        if let object = object as? T {
-                            if successSound {
-                                haptic.prepare()
-                                haptic.notificationOccurred(.success)
-                            }
-                            completionHandler(.success(object))
-                        } else {
-                            if failedSound {
-                                haptic.prepare()
-                                haptic.notificationOccurred(.error)
-                            }
-
-                            let error = NSError(domain: "IQAPIClientError", code: NSURLErrorCannotDecodeRawData, userInfo: [NSLocalizedDescriptionKey:decodeErrorMessage])
-                            completionHandler(.failure(error))
-                            if executeErroHandlerOnError {
-                                commonErrorHandlerBlock?(originalResponse.request!, parameters, originalResponse.data, error)
-                            }
-                        }
-                    }
-                } catch let error as NSError {
-                    OperationQueue.main.addOperation {
-                        if failedSound {
-                            haptic.prepare()
-                            haptic.notificationOccurred(.error)
-                        }
-
-                        completionHandler(.failure(error))
-                        if executeErroHandlerOnError {
-                            commonErrorHandlerBlock?(originalResponse.request!, parameters, originalResponse.data, error)
-                        }
-                    }
+                    completionHandler(.success(response))
                 }
+                break
             case .failure(let error):
                 OperationQueue.main.addOperation {
                     if failedSound {
@@ -156,16 +119,85 @@ public class IQAPIClient {
                         commonErrorHandlerBlock?(originalResponse.request!, parameters, originalResponse.data, error)
                     }
                 }
+                break
             }
         }
     }
+
+    //This is used for [String:Any] dictionary return type
+    @discardableResult public static func sendRequest(path: String, method: HTTPMethod = .get, parameters: Parameters? = nil,
+                                                         successSound: Bool = false, failedSound: Bool = false, executeErroHandlerOnError: Bool = true,
+                                                         completionHandler: @escaping (_ result: Swift.Result<[String:Any], NSError>) -> Void) -> DataRequest {
+        return sendRequest(url: baseURL.appendingPathComponent(path), method: method, parameters: parameters) { (originalResponse: AFDataResponse, result: Swift.Result<[String:Any], NSError>) in
+            switch result {
+            case .success(let response):
+                OperationQueue.main.addOperation {
+                    if successSound {
+                        haptic.prepare()
+                        haptic.notificationOccurred(.success)
+                    }
+                    completionHandler(.success(response))
+                }
+                break
+            case .failure(let error):
+                OperationQueue.main.addOperation {
+                    if failedSound {
+                        haptic.prepare()
+                        haptic.notificationOccurred(.error)
+                    }
+
+                    completionHandler(.failure(error))
+                    if executeErroHandlerOnError {
+                        commonErrorHandlerBlock?(originalResponse.request!, parameters, originalResponse.data, error)
+                    }
+                }
+                break
+            }
+        }
+    }
+
+    //Rare case but this is used for [[String:Any]] dictionary return type
+    @discardableResult public static func sendRequest(path: String, method: HTTPMethod = .get, parameters: Parameters? = nil,
+                                                         successSound: Bool = false, failedSound: Bool = false, executeErroHandlerOnError: Bool = true,
+                                                         completionHandler: @escaping (_ result: Swift.Result<[[String:Any]], NSError>) -> Void) -> DataRequest {
+        return sendRequest(url: baseURL.appendingPathComponent(path), method: method, parameters: parameters) { (originalResponse: AFDataResponse, result: Swift.Result<[[String:Any]], NSError>) in
+            switch result {
+            case .success(let response):
+                OperationQueue.main.addOperation {
+                    if successSound {
+                        haptic.prepare()
+                        haptic.notificationOccurred(.success)
+                    }
+                    completionHandler(.success(response))
+                }
+                break
+            case .failure(let error):
+                OperationQueue.main.addOperation {
+                    if failedSound {
+                        haptic.prepare()
+                        haptic.notificationOccurred(.error)
+                    }
+
+                    completionHandler(.failure(error))
+                    if executeErroHandlerOnError {
+                        commonErrorHandlerBlock?(originalResponse.request!, parameters, originalResponse.data, error)
+                    }
+                }
+                break
+            }
+        }
+    }
+}
+
+//Private
+private extension IQAPIClient {
 
     private struct RequestCounter {
         static var counter : Int = 0
     }
 
-    @discardableResult internal static func sendRequest<T>(url: URLConvertible, method: HTTPMethod = .get, parameters: Parameters? = nil,
-                                                           completionHandler: @escaping (_ originalResponse:AFDataResponse<Data>, _ result: Swift.Result<T, NSError>) -> Void) -> DataRequest {
+    @discardableResult static func sendRequest<T>(url: URLConvertible, method: HTTPMethod = .get, parameters: Parameters? = nil,
+                                                  completionHandler: @escaping (_ originalResponse:AFDataResponse<Data>, _ result: Swift.Result<T, NSError>) -> Void) -> DataRequest {
 
         RequestCounter.counter += 1
 
@@ -179,21 +211,21 @@ public class IQAPIClient {
             switch response.result {
             case .success(let data):    //Successfully got data response from server
 
-                let modifiedObject: T?
+                let modifiedObject: Any?
                 let modifiedError: NSError?
                 if let json = data.json {
                     if let responseModifierBlock = responseModifierBlock {  //Asking from responseModifiedBlock to return the modified dictionary which should be processed
                         let modifiedResult = responseModifierBlock(response.request!, json)
                         switch modifiedResult {
                         case .success(let modified):
-                            modifiedObject = modified as? T
+                            modifiedObject = modified
                             modifiedError = nil
                         case .failure(let error):
                             modifiedObject = nil
                             modifiedError = error
                         }
                     } else {
-                        modifiedObject = json as? T
+                        modifiedObject = json
                         modifiedError = nil
                     }
                 } else {
@@ -202,7 +234,26 @@ public class IQAPIClient {
                 }
 
                 if let modifiedObject = modifiedObject {
-                    completionHandler(response, .success(modifiedObject))
+                    do {
+                        let object: T?
+                        if let T = T.self as? Decodable.Type {
+                            let data = try JSONSerialization.data(withJSONObject: modifiedObject, options: [])
+                            object = T.decode(from: data) as? T
+                        } else if let response = response as? T {
+                            object = response
+                        } else {
+                            object = nil
+                        }
+
+                        if let object = object {
+                            completionHandler(response, .success(object))
+                        } else {
+                            let error = NSError(domain: "IQAPIClientError", code: NSURLErrorCannotDecodeRawData, userInfo: [NSLocalizedDescriptionKey:decodeErrorMessage])
+                            completionHandler(response, .failure(error))
+                        }
+                    } catch {
+                        completionHandler(response, .failure(error as NSError))
+                    }
                 } else if let modifiedError = modifiedError {
                     completionHandler(response, .failure(modifiedError))
                 } else {

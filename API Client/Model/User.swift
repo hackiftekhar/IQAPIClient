@@ -15,3 +15,12 @@ struct User: Codable {
     var phone: String?
     var photo: URL?
 }
+
+struct UncodedUser {
+
+    let id: Int
+    var name: String
+    var email: String?
+    var phone: String?
+    var photo: URL?
+}
