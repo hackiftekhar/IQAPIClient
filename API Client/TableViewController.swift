@@ -26,7 +26,7 @@ class TableViewController: UITableViewController {
         }
 
         activityIndicator.startAnimating()
-        IQAPIClient.getUsersList1 { [weak self] result in
+        let request = IQAPIClient.getUsersList1 { [weak self] result in
             self?.activityIndicator.stopAnimating()
             switch result {
             case .success(let data):
