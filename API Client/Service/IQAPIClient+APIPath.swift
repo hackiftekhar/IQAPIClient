@@ -11,24 +11,5 @@ import IQAPIClient
 
 internal enum ITAPIPath: String {
 
-    case push_register      =   "/push/register.php"
-
-    case register           =   "/user/register.php"
-    case roles              =   "/user/roles.php"
-    case session            =   "/user/session.php"
-    case profile            =   "/user/profile.php"
-
-    case change_password    =   "/user/password/change.php"
-    case forgot_password    =   "/user/password/forgot.php"
+    case users              =   "/users"
 }
-
-public struct APIMessage : Codable {
-    let status : Int
-    let message : String
-}
-
-public struct APIData<T: Decodable>: Decodable {
-    let status : Int
-    let data : T
-}
-

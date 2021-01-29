@@ -1,6 +1,6 @@
 PODS:
   - Alamofire (5.2.2)
-  - IQAPIClient (1.0.0):
+  - IQAPIClient (1.0.1):
     - Alamofire (~> 5)
   - SwiftLint (0.40.3)
 
@@ -19,9 +19,9 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Alamofire: 814429acc853c6c54ff123fc3d2ef66803823ce0
-  IQAPIClient: a9fb5c94814538b7016c21d4ac513922e521df3e
+  IQAPIClient: 7ee17f9034ee5544fa7042ce948755542623ec7a
   SwiftLint: dfd554ff0dff17288ee574814ccdd5cea85d76f7
 
 PODFILE CHECKSUM: b80637ba5c739fa60349e808dcad12c33f40102c
 
-COCOAPODS: 1.9.3
+COCOAPODS: 1.10.1

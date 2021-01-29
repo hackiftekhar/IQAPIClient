@@ -12,60 +12,20 @@ import Alamofire
 extension IQAPIClient {
 
     @discardableResult
-    static func signUp(_ attributes: [String: Any], completionHandler: @escaping (_ result: Swift.Result<User, NSError>) -> Void) -> DataRequest {
-        let path = ITAPIPath.register.rawValue
-        return sendRequest(path: path, method: .post, parameters: attributes, completionHandler: completionHandler)
+    static func getUsersList1(completionHandler: @escaping (_ result: Result<UserResponse<[User]>, [String:Any]>) -> Void) -> DataRequest {
+        let path = ITAPIPath.users.rawValue
+        return sendRequest(path: path, completionHandler: completionHandler)
     }
 
     @discardableResult
-    static func signIn(_ attributes: [String: Any], completionHandler: @escaping (_ result: Swift.Result<User, NSError>) -> Void) -> DataRequest {
-        let path = ITAPIPath.session.rawValue
-        return sendRequest(path: path, method: .post, parameters: attributes, completionHandler: completionHandler)
+    static func getUsersList2(completionHandler: @escaping (_ result: Swift.Result<UserResponse<[User]>, Error>) -> Void) -> DataRequest {
+        let path = ITAPIPath.users.rawValue
+        return sendRequest(path: path, completionHandler: completionHandler)
     }
 
     @discardableResult
-    static func getUserSession(completionHandler: @escaping (_ result: Swift.Result<User, NSError>) -> Void) -> DataRequest {
-        let path = ITAPIPath.session.rawValue
-        return sendRequest(path: path, method: .post, completionHandler: completionHandler)
-    }
-
-    @discardableResult
-    static func logout(completionHandler: @escaping (_ result: Swift.Result<APIMessage, NSError>) -> Void) -> DataRequest {
-        let path = ITAPIPath.session.rawValue
-        return sendRequest(path: path, method: .post, completionHandler: completionHandler)
-    }
-}
-
-// MARK: - Password -
-
-extension IQAPIClient {
-
-    @discardableResult
-    static func forgotPassword(_ attributes: [String: Any], completionHandler: @escaping (_ result: Swift.Result<APIMessage, NSError>) -> Void) -> DataRequest {
-        let path = ITAPIPath.forgot_password.rawValue
-        return sendRequest(path: path, method: .post, parameters: attributes, completionHandler: completionHandler)
-    }
-
-    @discardableResult
-    static func changePassword(_ attributes: [String: Any], completionHandler: @escaping (_ result: Swift.Result<APIMessage, NSError>) -> Void) -> DataRequest {
-        let path = ITAPIPath.change_password.rawValue
-        return sendRequest(path: path, method: .post, parameters: attributes, completionHandler: completionHandler)
-    }
-}
-
-// MARK: - Profile -
-
-extension IQAPIClient {
-
-    @discardableResult
-    static func getUserProfile(_ attributes: [String: Any], completionHandler: @escaping (_ result: Swift.Result<User, NSError>) -> Void) -> DataRequest {
-        let path = ITAPIPath.profile.rawValue
-        return sendRequest(path: path, method: .get, parameters: attributes, completionHandler: completionHandler)
-    }
-
-    @discardableResult
-    static func updateUserProfile(_ attributes: [String: Any], completionHandler: @escaping (_ result: Swift.Result<User, NSError>) -> Void) -> DataRequest {
-        let path = ITAPIPath.profile.rawValue
-        return sendRequest(path: path, method: .post, parameters: attributes, completionHandler: completionHandler)
+    static func getUsersList3(completionHandler: @escaping (_ result: Swift.Result<[String:Any], Error>) -> Void) -> DataRequest {
+        let path = ITAPIPath.users.rawValue
+        return sendRequest(path: path, completionHandler: completionHandler)
     }
 }

@@ -10,14 +10,14 @@
 		04B8BCCF84ECF930C285889F /* Pods_API_Client.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA3FED2F1F3F463B625FEDC9 /* Pods_API_Client.framework */; };
 		C0B6B0E8250A291400AB1ED9 /* IQAPIClient+User.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B6B0E7250A291400AB1ED9 /* IQAPIClient+User.swift */; };
 		C0B84295250A2F29003493F7 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B84294250A2F29003493F7 /* User.swift */; };
-		C0B98017250A35110033D49D /* IQAPIClient+Push.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B98016250A35110033D49D /* IQAPIClient+Push.swift */; };
 		C0BD23722508F551003DD9D1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BD23712508F551003DD9D1 /* AppDelegate.swift */; };
 		C0BD23742508F551003DD9D1 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BD23732508F551003DD9D1 /* SceneDelegate.swift */; };
-		C0BD23762508F551003DD9D1 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BD23752508F551003DD9D1 /* ViewController.swift */; };
+		C0BD23762508F551003DD9D1 /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BD23752508F551003DD9D1 /* TableViewController.swift */; };
 		C0BD23792508F551003DD9D1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C0BD23772508F551003DD9D1 /* Main.storyboard */; };
 		C0BD237B2508F551003DD9D1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C0BD237A2508F551003DD9D1 /* Assets.xcassets */; };
 		C0BD237E2508F551003DD9D1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C0BD237C2508F551003DD9D1 /* LaunchScreen.storyboard */; };
 		C0BD23892508FBB5003DD9D1 /* IQAPIClient+APIPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BD23882508FBB5003DD9D1 /* IQAPIClient+APIPath.swift */; };
+		C0C8144B25C41E7A00303542 /* UserResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0C8144A25C41E7A00303542 /* UserResponse.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,16 +26,16 @@
 		AA3FED2F1F3F463B625FEDC9 /* Pods_API_Client.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_API_Client.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0B6B0E7250A291400AB1ED9 /* IQAPIClient+User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "IQAPIClient+User.swift"; sourceTree = "<group>"; };
 		C0B84294250A2F29003493F7 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
-		C0B98016250A35110033D49D /* IQAPIClient+Push.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "IQAPIClient+Push.swift"; sourceTree = "<group>"; };
 		C0BD236E2508F551003DD9D1 /* API Client.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "API Client.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0BD23712508F551003DD9D1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C0BD23732508F551003DD9D1 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		C0BD23752508F551003DD9D1 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		C0BD23752508F551003DD9D1 /* TableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
 		C0BD23782508F551003DD9D1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		C0BD237A2508F551003DD9D1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C0BD237D2508F551003DD9D1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C0BD237F2508F551003DD9D1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C0BD23882508FBB5003DD9D1 /* IQAPIClient+APIPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "IQAPIClient+APIPath.swift"; sourceTree = "<group>"; };
+		C0C8144A25C41E7A00303542 /* UserResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserResponse.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +71,7 @@
 			isa = PBXGroup;
 			children = (
 				C0B84294250A2F29003493F7 /* User.swift */,
+				C0C8144A25C41E7A00303542 /* UserResponse.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -104,7 +105,7 @@
 				C0BD237C2508F551003DD9D1 /* LaunchScreen.storyboard */,
 				C0BD23772508F551003DD9D1 /* Main.storyboard */,
 				C0BD23732508F551003DD9D1 /* SceneDelegate.swift */,
-				C0BD23752508F551003DD9D1 /* ViewController.swift */,
+				C0BD23752508F551003DD9D1 /* TableViewController.swift */,
 			);
 			path = "API Client";
 			sourceTree = "<group>";
@@ -113,7 +114,6 @@
 			isa = PBXGroup;
 			children = (
 				C0BD23882508FBB5003DD9D1 /* IQAPIClient+APIPath.swift */,
-				C0B98016250A35110033D49D /* IQAPIClient+Push.swift */,
 				C0B6B0E7250A291400AB1ED9 /* IQAPIClient+User.swift */,
 			);
 			path = Service;
@@ -235,10 +235,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				C0BD23892508FBB5003DD9D1 /* IQAPIClient+APIPath.swift in Sources */,
-				C0BD23762508F551003DD9D1 /* ViewController.swift in Sources */,
+				C0BD23762508F551003DD9D1 /* TableViewController.swift in Sources */,
 				C0B84295250A2F29003493F7 /* User.swift in Sources */,
 				C0BD23722508F551003DD9D1 /* AppDelegate.swift in Sources */,
-				C0B98017250A35110033D49D /* IQAPIClient+Push.swift in Sources */,
+				C0C8144B25C41E7A00303542 /* UserResponse.swift in Sources */,
 				C0BD23742508F551003DD9D1 /* SceneDelegate.swift in Sources */,
 				C0B6B0E8250A291400AB1ED9 /* IQAPIClient+User.swift in Sources */,
 			);
