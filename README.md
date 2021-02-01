@@ -108,24 +108,101 @@ struct User: Decodable {
 }
 ```
 
+IQAPIClient Basic Method Signatures
+==========================
+
+#### Swift.Result version
+
+```swift
+static func sendRequest<Success>(
+            path: String,
+            method: HTTPMethod = .get,
+            parameters: Parameters? = nil,
+            completionHandler: @escaping
+            (_ result: Swift.Result<Success, Error>) -> Void)
+```
+
+where native **Swift.Result** looks like this
+```swift
+enum Result<Success, Failure> where Failure: Error {
+    case success(Success)	/// A success, storing a `Success` value.
+    case failure(Failure)	/// A failure, storing a `Failure` value.
+}
+```
+
+#### IQAPIClient.Result version
+
+```swift
+static func sendRequest<Success, Failure>(
+            path: String,
+            method: HTTPMethod = .get,
+            parameters: Parameters? = nil,
+            completionHandler: @escaping 
+            (_ result: IQAPIClient.Result<Success, Failure>) -> Void)
+```
+
+where **IQAPIClient.Result** looks like this
+```swift
+enum Result<Success, Failure> {
+    case success(Success)	/// A success, storing a `Success` value.
+    case failure(Failure)	/// A failure, storing a `Failure` value.
+    case error(Error)		/// An error, storing an `Error` value.
+}
+```
+
 API call using IQAPIClient
 ==========================
 
 To get list of users, there are a couple of ways you could use IQAPIClient.
 
-#### Method 1: Directly using the sendRequest method
+#### Method 1: Directly using the sendRequest method (Swift.Result version)
 
 ```swift
 class ViewController: UIViewController {
 
     private func getUsersList() {
         //Result<[User], NSError> detects that the app is asking for array of User object
-        IQAPIClient.sendRequest(path: "/users") { [weak self] (result: Result<[User], NSError>) in
+        IQAPIClient.sendRequest(path: "/users") { [weak self] (result: Swift.Result<[User], NSError>) in
             switch result {
             case .success(let users):
                 self?.users = users
                 self?.refreshUI()
             case .failure(let error):
+                //Show error alert
+                print(error.localizedDescription)
+            }
+        }
+    }
+}
+```
+
+#### Method 2: Same request but with IQAPIClient.Result version
+
+Let's say APIMessage looks like below and we get this kind of response when something goes wrong
+
+```swift
+struct APIMessage: Decodable {
+    let status: Bool
+    let code: Int
+    let message: String
+}
+```
+
+```swift
+class ViewController: UIViewController {
+
+    private func getUsersList() {
+        //Result<[User], NSError> detects that the app is asking for array of User object
+        IQAPIClient.sendRequest(path: "/users") { [weak self] (result: Swift.Result<[User], APIMessage>) in
+            switch result {
+            case .success(let users):   //[User] object
+                self?.users = users
+                self?.refreshUI()
+            case .failure(let message): //APIMessage object
+                //Show failure alert
+                print(message.code)
+                print(message.message)
+            case .error(let error):     //Error object
                 //Show error alert
                 print(error.localizedDescription)
             }
@@ -176,19 +253,16 @@ class ViewController: UIViewController {
 }
 ```
 
-### The sendRequest method parameters
-The sendRequest method have a couple of optional paramters which you can use according to your needs.
-```swift
-- method: Alamofire.HTTPMethod = .get
-- parameters: Alamofire.Parameters? = nil
+Advance Configuration
+==========================
+
+### Advance paramters of sendRequest method
+```
 - successSound: Bool = false  //A success sound/vibration will be played on success response, you could use it when you create some records like saving something in the server.
 - failedSound: Bool = false   //An error sound/vibration will be played on error 
 - executeErroHandlerOnError: Bool = true  //This will also execute common error handler block on error to handle all error from a single place.
-````
-
-Advance Configuration
-==========================
-//TODO
+```
+//TODO to add examples
 
 LICENSE
 ---
