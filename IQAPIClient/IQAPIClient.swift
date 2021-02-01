@@ -117,6 +117,14 @@ public class IQAPIClient {
 
     private static let haptic = UINotificationFeedbackGenerator()
 
+    public static let `jsonDecoder`: JSONDecoder = {
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .secondsSince1970
+        decoder.dataDecodingStrategy = .deferredToData
+        decoder.nonConformingFloatDecodingStrategy = .convertFromString(positiveInfinity: "+Infinity", negativeInfinity: "-Infinity", nan: "NaN")
+        return decoder
+    }()
+
     /// `Success, Failure` either be a `valid JSON type` or must conform to `Decodable` protocol
     @discardableResult public static func sendRequest<Success, Failure>(path: String, method: HTTPMethod = .get, parameters: Parameters? = nil,
                                                                         successSound: Bool = false, failedSound: Bool = false, executeErroHandlerOnError: Bool = true,

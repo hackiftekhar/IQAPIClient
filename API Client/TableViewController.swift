@@ -145,19 +145,22 @@ class TableViewController: UITableViewController {
         }
 
         activityIndicator.startAnimating()
-        IQAPIClient.sendRequest(path: ITAPIPath.users.rawValue) { [weak self] (result: Swift.Result<[String:Any], Error>) in
+//        IQAPIClient.sendRequest(path: ITAPIPath.users.rawValue) { [weak self] (result: Swift.Result<[String:Any], Error>) in
+//        IQAPIClient.sendRequest(path: ITAPIPath.users.rawValue) { [weak self] (result: Swift.Result<[String:Any], Error>) in
+//        IQAPIClient.sendRequest(path: ITAPIPath.users.rawValue) { [weak self] (result: Swift.Result<[String:Any], Error>) in
+        IQAPIClient.sendRequest(path: ITAPIPath.users.rawValue) { [weak self] (result: Swift.Result<[String: Any], Error>) in
 
             self?.activityIndicator.stopAnimating()
             switch result {
             case .success(let response):
 
-                let list = response["data"] as? [[String:Any]] ?? []
-                var users = [User]()
-                for user in list {
-                    users.append(User(attributes: user))
-                }
-
-                self?.users = users
+//                let list = response["data"] as? [[String:Any]] ?? []
+//                var users = [User]()
+//                for user in list {
+//                    users.append(User(attributes: user))
+//                }
+//
+//                self?.users = users
                 self?.refreshUI()
             case .failure(let error):
 //                let alertController = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)

@@ -22,21 +22,10 @@
 
 import Foundation
 
-internal extension JSONDecoder {
-
-    static let `default`: JSONDecoder = {
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .secondsSince1970
-        decoder.dataDecodingStrategy = .deferredToData
-        decoder.nonConformingFloatDecodingStrategy = .convertFromString(positiveInfinity: "+Infinity", negativeInfinity: "-Infinity", nan: "NaN")
-        return decoder
-    }()
-}
-
 internal extension Decodable {
     
     static func decode(from data: Data) throws -> Self? {
-        let object = try JSONDecoder.default.decode(self, from: data)
+        let object = try IQAPIClient.jsonDecoder.decode(self, from: data)
         return object
     }
 }
