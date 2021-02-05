@@ -27,7 +27,8 @@ import Alamofire
 
 internal extension IQAPIClient {
 
-    static func printRequestURL(url : URLConvertible, method:HTTPMethod, headers:HTTPHeaders?, parameters : [String : Any]?, requestNumber:Int) {
+    static func printRequestURL(url: URLConvertible, method: HTTPMethod,
+                                headers: HTTPHeaders?, parameters: [String: Any]?, requestNumber: Int) {
         if debuggingEnabled {
             print("\n(\(requestNumber)). Request Start \(method.rawValue): \(url) ------------------------")
 
@@ -39,7 +40,9 @@ internal extension IQAPIClient {
 
             for (key, value) in parameters ?? [:] {
                 if let file = value as? File {
-                    var fileAttributes : [String : Any] = ["name": file.fileName, "type" : file.mimeType, "size": file.data.count]
+                    var fileAttributes: [String: Any] = ["name": file.fileName,
+                                                         "type": file.mimeType,
+                                                         "size": file.data.count]
                     fileAttributes["url"] = file.fileURL?.absoluteString
                     param[key] = fileAttributes
                 } else {
@@ -55,9 +58,9 @@ internal extension IQAPIClient {
         }
     }
 
-    static func printResponse(url : URLConvertible, response : AFDataResponse<Data>, requestNumber:Int) {
+    static func printResponse(url: URLConvertible, response: AFDataResponse<Data>, requestNumber: Int) {
         if debuggingEnabled {
-            print("\n(\(requestNumber)). Response Start \(response.request?.httpMethod ?? "GET"): \(url) ------------------------")
+            print("\n(\(requestNumber)). Response Start \(response.request?.httpMethod ?? "GET"): \(url) -------------")
 
             if let header = response.response {
                 print("(\(requestNumber)). StatusCode: \(header.statusCode)")
@@ -87,4 +90,3 @@ internal extension IQAPIClient {
         }
     }
 }
-

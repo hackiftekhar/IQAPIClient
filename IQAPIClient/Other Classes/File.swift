@@ -7,10 +7,10 @@
 
 import Foundation
 
-public struct File : Hashable, Codable {
-    public let data : Data
-    public let mimeType : String
-    public let fileName : String
+public struct File: Hashable, Codable {
+    public let data: Data
+    public let mimeType: String
+    public let fileName: String
     public let fileURL: URL?
 
     public func hash(into hasher: inout Hasher) {
@@ -19,11 +19,11 @@ public struct File : Hashable, Codable {
         hasher.combine(fileName)
     }
 
-    public static func ==(lhs: File, rhs: File) -> Bool {
+    public static func == (lhs: File, rhs: File) -> Bool {
         return lhs.data == rhs.data
     }
 
-    public init(data:Data, mimeType:String, fileName:String, fileURL:URL? = nil) {
+    public init(data: Data, mimeType: String, fileName: String, fileURL: URL? = nil) {
         self.data = data
         self.mimeType = mimeType
         self.fileName = fileName

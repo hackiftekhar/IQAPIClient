@@ -22,13 +22,13 @@
 
 import Foundation
 
-public enum NSURLSuccess : Int {
+public enum NSURLSuccess: Int {
     case success200                 = 200
     case created201                 = 201
     case accepted202                = 202
 }
 
-public enum NSURLClientError : Int {
+public enum NSURLClientError: Int {
     case badRequest400                      = 400
     case unauthorized401                    = 401
     case paymentRequired402                 = 402
@@ -53,7 +53,7 @@ public enum NSURLClientError : Int {
     case activityAlreadyExist425            = 425
 }
 
-public enum NSURLServerError : Int {
+public enum NSURLServerError: Int {
     case internalServerError500             = 500
     case notImplemented501                  = 501
     case badGateway502                      = 502
@@ -61,4 +61,3 @@ public enum NSURLServerError : Int {
     case gatewayTimeout504                  = 504
     case httpVersionNotSupported505         = 505
 }
-

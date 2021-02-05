@@ -18,7 +18,8 @@ extension IQAPIClient {
     }
 
     @discardableResult
-    static func user(id: Int, completionHandler: @escaping (_ result: Swift.Result<User, Error>) -> Void) -> DataRequest {
+    static func user(id: Int,
+                     completionHandler: @escaping (_ result: Swift.Result<User, Error>) -> Void) -> DataRequest {
         let path = ITAPIPath.users.rawValue + "/\(id)"
         return sendRequest(path: path, completionHandler: completionHandler)
     }

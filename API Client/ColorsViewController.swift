@@ -48,7 +48,7 @@ class ColorsViewController: UITableViewController {
             case .success(let models):
                 self?.models = models
                 self?.refreshUI()
-            case .failure(let error):
+            case .failure:
                 break
             }
         }

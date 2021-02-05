@@ -22,7 +22,7 @@ class UserCell: UITableViewCell, IQModelableCell {
                 return
             }
 
-            textLabel?.text = model.first_name
+            textLabel?.text = model.name
             detailTextLabel?.text = model.email
             if let avatar = model.avatar {
                 imageView?.af.setImage(withURL: avatar)

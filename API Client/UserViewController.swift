@@ -50,7 +50,7 @@ class UserViewController: UITableViewController {
             case .success(let user):
                 self?.user = user
                 self?.refreshUI()
-            case .failure(let error):
+            case .failure:
                 break
             }
         }
@@ -61,11 +61,21 @@ class UserViewController: UITableViewController {
             let section = IQSection(identifier: 0)
             list.append(section)
 
-            list.append(IQTableViewCell.self, models: [IQTableViewCell.Model(text: "User ID", detail: "\(user.id)")], section: section)
-            list.append(IQTableViewCell.self, models: [IQTableViewCell.Model(text: "First Name", detail: user.first_name)], section: section)
-            list.append(IQTableViewCell.self, models: [IQTableViewCell.Model(text: "Last Name", detail: user.last_name)], section: section)
-            list.append(IQTableViewCell.self, models: [IQTableViewCell.Model(text: "Email", detail: user.email)], section: section)
-            list.append(IQTableViewCell.self, models: [IQTableViewCell.Model(text: "Avatar URL", detail: user.avatar?.absoluteString)], section: section)
+            list.append(IQTableViewCell.self,
+                        models: [IQTableViewCell.Model(text: "User ID", detail: "\(user.id)")],
+                        section: section)
+            list.append(IQTableViewCell.self,
+                        models: [IQTableViewCell.Model(text: "First Name", detail: user.firstName)],
+                        section: section)
+            list.append(IQTableViewCell.self,
+                        models: [IQTableViewCell.Model(text: "Last Name", detail: user.lastName)],
+                        section: section)
+            list.append(IQTableViewCell.self,
+                        models: [IQTableViewCell.Model(text: "Email", detail: user.email)],
+                        section: section)
+            list.append(IQTableViewCell.self,
+                        models: [IQTableViewCell.Model(text: "Avatar URL", detail: user.avatar?.absoluteString)],
+                        section: section)
         }
     }
 }

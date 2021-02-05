@@ -6,7 +6,6 @@
 //  Copyright © 2021 Iftekhar. All rights reserved.
 //
 
-
 import UIKit
 import IQAPIClient
 import Alamofire
@@ -51,7 +50,7 @@ class ColorViewController: UITableViewController {
             case .success(let color):
                 self?.color = color
                 self?.refreshUI()
-            case .failure(let error):
+            case .failure:
                 break
             }
         }
@@ -62,11 +61,21 @@ class ColorViewController: UITableViewController {
             let section = IQSection(identifier: 0)
             list.append(section)
 
-            list.append(IQTableViewCell.self, models: [IQTableViewCell.Model(text: "Color ID", detail: "\(color.id)")], section: section)
-            list.append(IQTableViewCell.self, models: [IQTableViewCell.Model(text: "Name", detail: color.name)], section: section)
-            list.append(IQTableViewCell.self, models: [IQTableViewCell.Model(text: "Year", detail: "\(color.year)")], section: section)
-            list.append(IQTableViewCell.self, models: [IQTableViewCell.Model(text: "Color", detail: color.color)], section: section)
-            list.append(IQTableViewCell.self, models: [IQTableViewCell.Model(text: "Pantone Value", detail: color.pantone_value)], section: section)
+            list.append(IQTableViewCell.self,
+                        models: [IQTableViewCell.Model(text: "Color ID", detail: "\(color.id)")],
+                        section: section)
+            list.append(IQTableViewCell.self,
+                        models: [IQTableViewCell.Model(text: "Name", detail: color.name)],
+                        section: section)
+            list.append(IQTableViewCell.self,
+                        models: [IQTableViewCell.Model(text: "Year", detail: "\(color.year)")],
+                        section: section)
+            list.append(IQTableViewCell.self,
+                        models: [IQTableViewCell.Model(text: "Color", detail: color.color)],
+                        section: section)
+            list.append(IQTableViewCell.self,
+                        models: [IQTableViewCell.Model(text: "Pantone Value", detail: color.pantoneValue)],
+                        section: section)
         }
     }
 }

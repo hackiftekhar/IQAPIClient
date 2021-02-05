@@ -46,7 +46,7 @@ class UsersViewController: UITableViewController {
             case .success(let users):
                 self?.users = users
                 self?.refreshUI()
-            case .failure(let error):
+            case .failure:
                 break
             }
         }

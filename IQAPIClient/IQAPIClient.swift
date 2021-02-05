@@ -23,7 +23,7 @@
 import UIKit
 import Alamofire
 
-//MARK: - ITAPIClient -
+// MARK: - ITAPIClient -
 
 // If you would like to convert your JSON responses to model online,
 // then https://jsonmaster.github.io/ site will help you to do it quickly.
@@ -51,8 +51,9 @@ public class IQAPIClient {
     public static var unintentedResponseErrorMessage = "Looks like we received unexpected response from our server."
     public static var decodeErrorMessage = "Unable to decode server response."
 
-    /// A error handler block for all errors (It save a lot of code we write at every place to show error), now implement it and show error message from here, no need to write error alert code everywhere
-    public static var commonErrorHandlerBlock: ((URLRequest, Parameters?, Data?, Error)->Void)?
+    /// A error handler block for all errors (It save a lot of code we write at every place to show error),
+    /// now implement it and show error message from here, no need to write error alert code everywhere
+    public static var commonErrorHandlerBlock: ((URLRequest, Parameters?, Data?, Error) -> Void)?
 
 ///--------------------------
 ///     responseModifierBlock is used to modify the response before any processing.
@@ -64,15 +65,18 @@ public class IQAPIClient {
 //            "name":"Some name"
 //        }
 //     }
-///     In above case, you are only interested in the inner object which is inside data. So from responseModifierBlock you should return `.success(response["data"])` where data is a [String:Any]
+//     In above case, you are only interested in the inner object which is inside data.
+//      So from responseModifierBlock you should return `.success(response["data"])` where data is a [String:Any]
 ///--------------------------
 ///    Let's also assume we another structure of success message
 //    {
 //        "status": 200,
 //        "message": "We have successfully sent you an email with instructions to reset your password."
 //     }
-///     In above case, if you are interested in status code also then you could return the same object you received like `.success(response)`.
-///     Or if you are only interested in "message" and specify returned result type as String like this `Result<String, FailureModel, Error>)`, then you should return `.success(response["message"])` where message is a String
+//     In above case, if you are interested in status code also
+//     then you could return the same object you received like `.success(response)`.
+//     Or if you are only interested in "message" and specify returned result type as String like this
+//    `Result<String, FailureModel, Error>)`, then you should return `.success(response["message"])`
 ///--------------------------
 ///     Let's also assume we another below structure for failure case
 //     {
@@ -81,8 +85,10 @@ public class IQAPIClient {
 //     }
 ///
 ///     In above case, you should return a `.failure(error)` where you construct an error object like below
-///     let error = Error(domain: "Error", code: response["status"] as! Int, userInfo: [NSLocalizedDescriptionKey:response["message"] as! String])
-///     completionHandler(.failure(error))
+//     let error = Error(domain: "Error",
+//                      code: response["status"] as! Int,
+//                      userInfo: [NSLocalizedDescriptionKey:response["message"] as! String])
+//     completionHandler(.failure(error))
 
     public static var responseModifierBlock: ((URLRequest, Any)->Result<Any, Any>)?
 
@@ -96,13 +102,19 @@ public class IQAPIClient {
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .secondsSince1970
         decoder.dataDecodingStrategy = .deferredToData
-        decoder.nonConformingFloatDecodingStrategy = .convertFromString(positiveInfinity: "+Infinity", negativeInfinity: "-Infinity", nan: "NaN")
+        decoder.nonConformingFloatDecodingStrategy = .convertFromString(positiveInfinity: "+Infinity",
+                                                                        negativeInfinity: "-Infinity",
+                                                                        nan: "NaN")
         return decoder
     }()
 
     /// `Success, Failure` either be a `valid JSON type` or must conform to `Decodable` protocol
-    @discardableResult public static func sendRequest<Success, Failure>(path: String, method: HTTPMethod = .get, parameters: Parameters? = nil,
-                                                                        successSound: Bool = false, failedSound: Bool = false, executeErrorHandlerOnError: Bool = true,
+    @discardableResult public static func sendRequest<Success, Failure>(path: String,
+                                                                        method: HTTPMethod = .get,
+                                                                        parameters: Parameters? = nil,
+                                                                        successSound: Bool = false,
+                                                                        failedSound: Bool = false,
+                                                                        executeErrorHandlerOnError: Bool = true,
                                                                         completionHandler: @escaping (_ result: Result<Success, Failure>) -> Void) -> DataRequest {
 
         return _sendRequest(url: baseURL.appendingPathComponent(path), method: method, parameters: parameters) { (originalResponse: AFDataResponse, result: Result<Success, Failure>) in
@@ -115,7 +127,6 @@ public class IQAPIClient {
                 OperationQueue.main.addOperation {
                     completionHandler(.success(response))
                 }
-                break
             case .failure(let response):
                 if failedSound {
                     haptic.prepare()
@@ -124,7 +135,6 @@ public class IQAPIClient {
                 OperationQueue.main.addOperation {
                     completionHandler(.failure(response))
                 }
-                break
             case .error(let error):
                 if failedSound {
                     haptic.prepare()
@@ -136,14 +146,17 @@ public class IQAPIClient {
                         commonErrorHandlerBlock?(originalResponse.request!, parameters, originalResponse.data, error)
                     }
                 }
-                break
             }
         }
     }
 
     /// `Success, Failure` either be a `valid JSON type` or must conform to `Decodable` protocol
-    @discardableResult public static func sendRequest<Success>(path: String, method: HTTPMethod = .get, parameters: Parameters? = nil,
-                                                               successSound: Bool = false, failedSound: Bool = false, executeErrorHandlerOnError: Bool = true,
+    @discardableResult public static func sendRequest<Success>(path: String,
+                                                               method: HTTPMethod = .get,
+                                                               parameters: Parameters? = nil,
+                                                               successSound: Bool = false,
+                                                               failedSound: Bool = false,
+                                                               executeErrorHandlerOnError: Bool = true,
                                                                completionHandler: @escaping (_ result: Swift.Result<Success, Error>) -> Void) -> DataRequest {
 
         return _sendRequest(url: baseURL.appendingPathComponent(path), method: method, parameters: parameters) { (originalResponse: AFDataResponse, result: Result<Success, Error>) in
@@ -156,7 +169,6 @@ public class IQAPIClient {
                 OperationQueue.main.addOperation {
                     completionHandler(.success(response))
                 }
-                break
             case .failure(let response):
                 if failedSound {
                     haptic.prepare()
@@ -169,7 +181,6 @@ public class IQAPIClient {
                         commonErrorHandlerBlock?(originalResponse.request!, parameters, originalResponse.data, response)
                     }
                 }
-                break
             case .error(let error):
                 if failedSound {
                     haptic.prepare()
@@ -182,7 +193,6 @@ public class IQAPIClient {
                         commonErrorHandlerBlock?(originalResponse.request!, parameters, originalResponse.data, error)
                     }
                 }
-                break
             }
         }
     }
@@ -192,11 +202,17 @@ public class IQAPIClient {
 internal extension IQAPIClient {
 
     private struct RequestCounter {
-        static var counter : Int = 0
+        static var counter: Int = 0
     }
 
-    @discardableResult private static func _sendRequest<Success, Failure>(url: URLConvertible, method: HTTPMethod = .get, parameters: Parameters? = nil,
-                                                                          completionHandler: @escaping (_ originalResponse:AFDataResponse<Data>, _ result: Result<Success, Failure>) -> Void) -> DataRequest {
+    // swiftlint:disable identifier_name
+    // swiftlint:disable cyclomatic_complexity
+    // swiftlint:disable line_length
+    // swiftlint:disable function_body_length
+    @discardableResult private static func _sendRequest<Success, Failure>(url: URLConvertible,
+                                                                          method: HTTPMethod = .get,
+                                                                          parameters: Parameters? = nil,
+                                                                          completionHandler: @escaping (_ originalResponse: AFDataResponse<Data>, _ result: Result<Success, Failure>) -> Void) -> DataRequest {
 
         guard Success.Type.self != Failure.Type.self else {
             fatalError("Success \(Success.self) and Failure \(Failure.self) must not be of same type")
@@ -205,7 +221,8 @@ internal extension IQAPIClient {
         RequestCounter.counter += 1
 
         let requestNumber = RequestCounter.counter
-        printRequestURL(url: url, method: method, headers: httpHeaders, parameters: parameters, requestNumber: requestNumber)
+        printRequestURL(url: url, method: method, headers: httpHeaders,
+                        parameters: parameters, requestNumber: requestNumber)
 
         let finalCompletionHandler: (AFDataResponse<Data>) -> Void = { (response) in
 
@@ -217,7 +234,8 @@ internal extension IQAPIClient {
                 let modifiedError: Error?
                 var isFailure = false
                 if let json = data.json {
-                    if let responseModifierBlock = responseModifierBlock {  /// Asking from responseModifiedBlock to return the modified dictionary which should be processed
+                    /// Asking from responseModifiedBlock to return the modified dictionary which should be processed
+                    if let responseModifierBlock = responseModifierBlock {
                         let modifiedResult = responseModifierBlock(response.request!, json)
                         switch modifiedResult {
                         case .success(let modified):
@@ -260,7 +278,9 @@ internal extension IQAPIClient {
                                 } else {
                                     success = nil
                                     let message = "\(Success.self) does not confirm to Decodable protocol."
-                                    successDecodeError = NSError(domain: NSStringFromClass(Self.self), code: NSURLErrorCannotDecodeRawData, userInfo: [NSLocalizedDescriptionKey: message])
+                                    successDecodeError = NSError(domain: NSStringFromClass(Self.self),
+                                                                 code: NSURLErrorCannotDecodeRawData,
+                                                                 userInfo: [NSLocalizedDescriptionKey: message])
                                 }
                             } else {
                                 success = nil
@@ -287,7 +307,9 @@ internal extension IQAPIClient {
                             } else {
                                 failure = nil
                                 let message = "\(Failure.self) does not confirm to Decodable protocol."
-                                failureDecodeError = NSError(domain: NSStringFromClass(Self.self), code: NSURLErrorCannotDecodeRawData, userInfo: [NSLocalizedDescriptionKey: message])
+                                failureDecodeError = NSError(domain: NSStringFromClass(Self.self),
+                                                             code: NSURLErrorCannotDecodeRawData,
+                                                             userInfo: [NSLocalizedDescriptionKey: message])
                             }
                         } else {
                             failure = nil
@@ -317,7 +339,9 @@ internal extension IQAPIClient {
                                 print(finalMessges.joined(separator: "\n\n"))
                             }
 
-                            let error = NSError(domain: NSStringFromClass(Self.self), code: NSURLErrorCannotDecodeRawData, userInfo: [NSLocalizedDescriptionKey:decodeErrorMessage])
+                            let error = NSError(domain: NSStringFromClass(Self.self),
+                                                code: NSURLErrorCannotDecodeRawData,
+                                                userInfo: [NSLocalizedDescriptionKey: decodeErrorMessage])
                             completionHandler(response, .error(error))
                         }
                     } catch {
@@ -326,7 +350,9 @@ internal extension IQAPIClient {
                 } else if let modifiedError = modifiedError {
                     completionHandler(response, .error(modifiedError))
                 } else {
-                    let error = NSError(domain: NSStringFromClass(Self.self), code: NSURLErrorCannotDecodeRawData, userInfo: [NSLocalizedDescriptionKey:decodeErrorMessage])
+                    let error = NSError(domain: NSStringFromClass(Self.self),
+                                        code: NSURLErrorCannotDecodeRawData,
+                                        userInfo: [NSLocalizedDescriptionKey: decodeErrorMessage])
                     completionHandler(response, .error(error))
                 }
 
@@ -344,15 +370,20 @@ internal extension IQAPIClient {
                 if let parameters = parameters {
                     for (key, value) in parameters {
                         if let data = value as? File {
-                            multipartFormData.append(data.data, withName: key, fileName: data.fileName, mimeType: data.mimeType)
+                            multipartFormData.append(data.data,
+                                                     withName: key,
+                                                     fileName: data.fileName,
+                                                     mimeType: data.mimeType)
                         } else {
-                            multipartFormData.append("\(value)".data(using: String.Encoding.utf8)!, withName: key as String)
+                            multipartFormData.append("\(value)".data(using: String.Encoding.utf8)!,
+                                                     withName: key as String)
                         }
                     }
                 }
             }, to: url, method: method, headers: httpHeaders)
         } else {
-            request = AF.request(url, method: method, parameters: parameters, encoding: (method == .get ? URLEncoding.default : JSONEncoding.default), headers: httpHeaders)
+            request = AF.request(url, method: method, parameters: parameters,
+                                 encoding: (method == .get ? URLEncoding.default : JSONEncoding.default), headers: httpHeaders)
         }
 
         request.responseData(queue: DispatchQueue.global(qos: .default), completionHandler: finalCompletionHandler)

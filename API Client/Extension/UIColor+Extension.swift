@@ -12,13 +12,13 @@ extension UIColor {
 
     convenience init(hex: String) {
 
-        var cString:String = hex.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
+        var cString: String = hex.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
 
-        if (cString.hasPrefix("#")) {
+        if cString.hasPrefix("#") {
             cString.remove(at: cString.startIndex)
         }
 
-        var rgbValue:UInt64 = 0
+        var rgbValue: UInt64 = 0
         Scanner(string: cString).scanHexInt64(&rgbValue)
 
         let red = CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0
@@ -30,9 +30,12 @@ extension UIColor {
 
     var isLight: Bool {
         let originalCGColor = self.cgColor
-        // Now we need to convert it to the RGB colorspace. UIColor.white / UIColor.black are greyscale and not RGB.
-        // If you don't do this then you will crash when accessing components index 2 below when evaluating greyscale colors.
-        let RGBCGColor = originalCGColor.converted(to: CGColorSpaceCreateDeviceRGB(), intent: .defaultIntent, options: nil)
+        // Now we need to convert it to the RGB colorspace.
+        // UIColor.white / UIColor.black are greyscale and not RGB.
+        // If you don't do this then you will crash when accessing
+        // components index 2 below when evaluating greyscale colors.
+        let RGBCGColor = originalCGColor.converted(to: CGColorSpaceCreateDeviceRGB(),
+                                                   intent: .defaultIntent, options: nil)
         guard let components = RGBCGColor?.components else {
             return true
         }
@@ -44,4 +47,3 @@ extension UIColor {
         return (brightness > 0.5)
     }
 }
-

@@ -18,7 +18,8 @@ extension IQAPIClient {
     }
 
     @discardableResult
-    static func color(id: Int, completionHandler: @escaping (_ result: Swift.Result<Color, Error>) -> Void) -> DataRequest {
+    static func color(id: Int,
+                      completionHandler: @escaping (_ result: Swift.Result<Color, Error>) -> Void) -> DataRequest {
         let path = ITAPIPath.colors.rawValue + "/\(id)"
         return sendRequest(path: path, completionHandler: completionHandler)
     }

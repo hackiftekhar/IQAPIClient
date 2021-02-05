@@ -10,7 +10,7 @@ import UIKit
 import IQListKit
 
 class ColorCell: UITableViewCell, IQModelableCell {
-    
+
     typealias Model = Color
 
     var model: Model? {

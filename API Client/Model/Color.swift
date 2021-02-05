@@ -28,14 +28,14 @@ struct Color: Decodable, Hashable {
     var name: String
     var year: Int
     var color: String
-    var pantone_value: String
+    var pantoneValue: String
 
     enum CodingKeys: String, CodingKey {
         case id = "id"
         case name = "name"
         case year = "year"
         case color = "color"
-        case pantone_value = "pantone_value"
+        case pantoneValue = "pantone_value"
     }
 
     init(from decoder: Decoder) throws {
@@ -46,6 +46,6 @@ struct Color: Decodable, Hashable {
         name = try container.decode(String.self, forKey: .name)
         year = try container.decode(Int.self, forKey: .year)
         color = try container.decode(String.self, forKey: .color)
-        pantone_value = try container.decode(String.self, forKey: .pantone_value)
+        pantoneValue = try container.decode(String.self, forKey: .pantoneValue)
     }
 }

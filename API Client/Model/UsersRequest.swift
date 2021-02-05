@@ -9,7 +9,6 @@
 import Foundation
 
 struct UsersRequest: Encodable {
-    let page_index: Int
-    let page_size: Int
-    let parameter_2: String?
+    let pageIndex: Int
+    let pageSize: Int
 }
