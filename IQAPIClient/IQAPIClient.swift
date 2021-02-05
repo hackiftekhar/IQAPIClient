@@ -25,33 +25,8 @@ import Alamofire
 
 //MARK: - ITAPIClient -
 
-public struct UploadableFile : Hashable {
-    public let data : Data
-    public let mimeType : String
-    public let fileName : String
-    public let fileURL: URL?
-
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(data)
-        hasher.combine(mimeType)
-        hasher.combine(fileName)
-    }
-    
-    public var hashValue: Int {
-        return data.hashValue
-    }
-
-    public init(data:Data, mimeType:String, fileName:String, fileURL:URL? = nil) {
-        self.data = data
-        self.mimeType = mimeType
-        self.fileName = fileName
-        self.fileURL = fileURL
-    }
-
-    public static func ==(lhs: UploadableFile, rhs: UploadableFile) -> Bool {
-        return lhs.data == rhs.data
-    }
-}
+// If you would like to convert your JSON responses to model online,
+// then https://jsonmaster.github.io/ site will help you to do it quickly.
 
 public class IQAPIClient {
 
@@ -117,7 +92,7 @@ public class IQAPIClient {
 
     private static let haptic = UINotificationFeedbackGenerator()
 
-    public static let `jsonDecoder`: JSONDecoder = {
+    public static let jsonDecoder: JSONDecoder = {
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .secondsSince1970
         decoder.dataDecodingStrategy = .deferredToData
@@ -127,7 +102,7 @@ public class IQAPIClient {
 
     /// `Success, Failure` either be a `valid JSON type` or must conform to `Decodable` protocol
     @discardableResult public static func sendRequest<Success, Failure>(path: String, method: HTTPMethod = .get, parameters: Parameters? = nil,
-                                                                        successSound: Bool = false, failedSound: Bool = false, executeErroHandlerOnError: Bool = true,
+                                                                        successSound: Bool = false, failedSound: Bool = false, executeErrorHandlerOnError: Bool = true,
                                                                         completionHandler: @escaping (_ result: Result<Success, Failure>) -> Void) -> DataRequest {
 
         return _sendRequest(url: baseURL.appendingPathComponent(path), method: method, parameters: parameters) { (originalResponse: AFDataResponse, result: Result<Success, Failure>) in
@@ -157,7 +132,7 @@ public class IQAPIClient {
                 }
                 OperationQueue.main.addOperation {
                     completionHandler(.error(error))
-                    if executeErroHandlerOnError {
+                    if executeErrorHandlerOnError {
                         commonErrorHandlerBlock?(originalResponse.request!, parameters, originalResponse.data, error)
                     }
                 }
@@ -168,7 +143,7 @@ public class IQAPIClient {
 
     /// `Success, Failure` either be a `valid JSON type` or must conform to `Decodable` protocol
     @discardableResult public static func sendRequest<Success>(path: String, method: HTTPMethod = .get, parameters: Parameters? = nil,
-                                                               successSound: Bool = false, failedSound: Bool = false, executeErroHandlerOnError: Bool = true,
+                                                               successSound: Bool = false, failedSound: Bool = false, executeErrorHandlerOnError: Bool = true,
                                                                completionHandler: @escaping (_ result: Swift.Result<Success, Error>) -> Void) -> DataRequest {
 
         return _sendRequest(url: baseURL.appendingPathComponent(path), method: method, parameters: parameters) { (originalResponse: AFDataResponse, result: Result<Success, Error>) in
@@ -190,7 +165,7 @@ public class IQAPIClient {
                 OperationQueue.main.addOperation {
                     completionHandler(.failure(response))
 
-                    if executeErroHandlerOnError {
+                    if executeErrorHandlerOnError {
                         commonErrorHandlerBlock?(originalResponse.request!, parameters, originalResponse.data, response)
                     }
                 }
@@ -203,7 +178,7 @@ public class IQAPIClient {
                 OperationQueue.main.addOperation {
                     completionHandler(.failure(error))
 
-                    if executeErroHandlerOnError {
+                    if executeErrorHandlerOnError {
                         commonErrorHandlerBlock?(originalResponse.request!, parameters, originalResponse.data, error)
                     }
                 }
@@ -360,7 +335,7 @@ internal extension IQAPIClient {
             }
         }
 
-        let isMultipart = parameters?.firstIndex(where: { (_, value) -> Bool in value is UploadableFile }) != nil
+        let isMultipart = parameters?.firstIndex(where: { (_, value) -> Bool in value is File }) != nil
 
         let request: DataRequest
 
@@ -368,7 +343,7 @@ internal extension IQAPIClient {
             request = AF.upload(multipartFormData: { (multipartFormData) in
                 if let parameters = parameters {
                     for (key, value) in parameters {
-                        if let data = value as? UploadableFile {
+                        if let data = value as? File {
                             multipartFormData.append(data.data, withName: key, fileName: data.fileName, mimeType: data.mimeType)
                         } else {
                             multipartFormData.append("\(value)".data(using: String.Encoding.utf8)!, withName: key as String)

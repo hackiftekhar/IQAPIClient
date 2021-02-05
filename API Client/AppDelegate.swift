@@ -75,50 +75,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
 
-        //We have below structure of API response, and usually I'm only interested in "data" field so I implemented the responseModifierBlock according to the below response
-        /*
-         Success
-         {
-            "status": 200,
-            "data": {
-                "id":4,
-                "name":"Some name"
+        IQAPIClient.responseModifierBlock = { (request, response) in
+
+            guard let response = response as? [String: Any] else {
+                let error = NSError(domain: "ServerError", code: NSURLErrorBadServerResponse, userInfo: [NSLocalizedDescriptionKey: IQAPIClient.unintentedResponseErrorMessage])
+               return .error(error)
             }
-         }
-         */
 
-        /*
-         Success
-         {
-            "status": 200,
-            "message": "We have successfully sent you an email with instructions to reset your password."
-         }
-         */
-
-        /*
-         Error
-         {
-            "status": 400,
-            "message": "Something went wrong"
-         }
-         */
-
-//        IQAPIClient.responseModifierBlock = { (request, response) in
-//
-//            guard let response = response as? [String: Any] else {
-//                let error = NSError(domain: "ServerError", code: NSURLErrorBadServerResponse, userInfo: [NSLocalizedDescriptionKey: IQAPIClient.unintentedResponseErrorMessage])
-//               return .error(error)
-//            }
-//
-//            if let data = response["data"] as? [String:Any] {
-//                return .success(data)
-//            } else  if let data = response["data"] as? [[String:Any]] {
-//                return .success(data)
-//            } else {
-//                let error = NSError(domain: "ServerError", code: NSURLErrorBadServerResponse, userInfo: [NSLocalizedDescriptionKey: IQAPIClient.unintentedResponseErrorMessage])
-//               return .error(error)
-//            }
-//        }
+            if let data = response["data"] as? [String:Any] {
+                if data.count == 0 {
+                    let error = NSError(domain: "ServerError", code: NSURLClientError.notFound404.rawValue, userInfo: [NSLocalizedDescriptionKey: "Record does not exist"])
+                    return .failure(error)
+                } else {
+                    return .success(data)
+                }
+            } else if let data = response["data"] as? [[String:Any]] {
+                return .success(data)
+            } else {
+                let error = NSError(domain: "ServerError", code: NSURLErrorBadServerResponse, userInfo: [NSLocalizedDescriptionKey: IQAPIClient.unintentedResponseErrorMessage])
+               return .error(error)
+            }
+        }
     }
 }
 

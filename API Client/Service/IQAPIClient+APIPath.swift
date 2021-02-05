@@ -12,4 +12,5 @@ import IQAPIClient
 internal enum ITAPIPath: String {
 
     case users              =   "/users"
+    case colors             =   "/colors"
 }

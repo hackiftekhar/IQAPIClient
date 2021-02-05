@@ -12,20 +12,14 @@ import Alamofire
 extension IQAPIClient {
 
     @discardableResult
-    static func getUsersList1(completionHandler: @escaping (_ result: Result<UserResponse<[User]>, [String:Any]>) -> Void) -> DataRequest {
+    static func users(completionHandler: @escaping (_ result: Swift.Result<[User], Error>) -> Void) -> DataRequest {
         let path = ITAPIPath.users.rawValue
         return sendRequest(path: path, completionHandler: completionHandler)
     }
 
     @discardableResult
-    static func getUsersList2(completionHandler: @escaping (_ result: Swift.Result<UserResponse<[User]>, Error>) -> Void) -> DataRequest {
-        let path = ITAPIPath.users.rawValue
-        return sendRequest(path: path, completionHandler: completionHandler)
-    }
-
-    @discardableResult
-    static func getUsersList3(completionHandler: @escaping (_ result: Swift.Result<[String:Any], Error>) -> Void) -> DataRequest {
-        let path = ITAPIPath.users.rawValue
+    static func user(id: Int, completionHandler: @escaping (_ result: Swift.Result<User, Error>) -> Void) -> DataRequest {
+        let path = ITAPIPath.users.rawValue + "/\(id)"
         return sendRequest(path: path, completionHandler: completionHandler)
     }
 }

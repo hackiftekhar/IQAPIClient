@@ -38,7 +38,7 @@ internal extension IQAPIClient {
             var param = [String: Any]()
 
             for (key, value) in parameters ?? [:] {
-                if let file = value as? UploadableFile {
+                if let file = value as? File {
                     var fileAttributes : [String : Any] = ["name": file.fileName, "type" : file.mimeType, "size": file.data.count]
                     fileAttributes["url"] = file.fileURL?.absoluteString
                     param[key] = fileAttributes
