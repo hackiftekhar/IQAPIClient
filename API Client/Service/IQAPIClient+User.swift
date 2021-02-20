@@ -1,5 +1,5 @@
 //
-//  ITAPiClient+User.swift
+//  IQAPIClient+User.swift
 //  Institute
 //
 //  Created by Iftekhar on 31/05/20.

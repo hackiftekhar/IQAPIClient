@@ -1,5 +1,5 @@
 //
-//  ITAPIClient.swift
+//  IQAPIClient.swift
 //  https://github.com/hackiftekhar/IQAPIClient
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -22,8 +22,6 @@
 
 import UIKit
 import Alamofire
-
-// MARK: - ITAPIClient -
 
 // If you would like to convert your JSON responses to model online,
 // then https://jsonmaster.github.io/ site will help you to do it quickly.
@@ -117,6 +115,8 @@ public class IQAPIClient {
                                                                         executeErrorHandlerOnError: Bool = true,
                                                                         completionHandler: @escaping (_ result: Result<Success, Failure>) -> Void) -> DataRequest {
 
+        assert(baseURL != nil, "basseURL is not specified.")
+
         return _sendRequest(url: baseURL.appendingPathComponent(path), method: method, parameters: parameters) { (originalResponse: AFDataResponse, result: Result<Success, Failure>) in
             switch result {
             case .success(let response):
@@ -158,6 +158,8 @@ public class IQAPIClient {
                                                                failedSound: Bool = false,
                                                                executeErrorHandlerOnError: Bool = true,
                                                                completionHandler: @escaping (_ result: Swift.Result<Success, Error>) -> Void) -> DataRequest {
+
+        assert(baseURL != nil, "basseURL is not specified.")
 
         return _sendRequest(url: baseURL.appendingPathComponent(path), method: method, parameters: parameters) { (originalResponse: AFDataResponse, result: Result<Success, Error>) in
             switch result {
