@@ -26,7 +26,7 @@ import Alamofire
 // If you would like to convert your JSON responses to model online,
 // then https://jsonmaster.github.io/ site will help you to do it quickly.
 
-public class IQAPIClient {
+final public class IQAPIClient {
 
     @frozen public enum Result<Success, Failure> {
 
