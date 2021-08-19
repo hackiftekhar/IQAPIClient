@@ -1,9 +1,9 @@
 {
   "name": "IQAPIClient",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "source": {
     "git": "https://github.com/hackiftekhar/IQAPIClient.git",
-    "tag": "1.0.3"
+    "tag": "1.0.4"
   },
   "summary": "API Client to communicate with the REST API and auto conversion to model classes.",
   "homepage": "https://github.com/hackiftekhar/IQAPIClient",
