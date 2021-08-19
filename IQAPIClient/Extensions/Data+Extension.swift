@@ -36,7 +36,7 @@ internal extension Data {
         do {
             let data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
             return data.string
-        } catch {
+        } catch let error {
             print(error)
         }
 
@@ -57,7 +57,7 @@ internal extension Data {
             } else {
                 return json
             }
-        } catch {
+        } catch let error {
             print(error)
         }
 

@@ -41,7 +41,7 @@ internal extension Dictionary where Key == String {
         do {
             let data = try JSONSerialization.data(withJSONObject: self, options: .prettyPrinted)
             return data
-        } catch {
+        } catch let error {
             print(error)
         }
 

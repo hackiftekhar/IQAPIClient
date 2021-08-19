@@ -110,6 +110,7 @@ final public class IQAPIClient {
     @discardableResult public static func sendRequest<Success, Failure>(path: String,
                                                                         method: HTTPMethod = .get,
                                                                         parameters: Parameters? = nil,
+                                                                        encoding: ParameterEncoding? = nil,
                                                                         successSound: Bool = false,
                                                                         failedSound: Bool = false,
                                                                         executeErrorHandlerOnError: Bool = true,
@@ -117,7 +118,10 @@ final public class IQAPIClient {
 
         assert(baseURL != nil, "basseURL is not specified.")
 
-        return _sendRequest(url: baseURL.appendingPathComponent(path), method: method, parameters: parameters) { (originalResponse: AFDataResponse, result: Result<Success, Failure>) in
+        return _sendRequest(url: baseURL.appendingPathComponent(path),
+                            method: method,
+                            parameters: parameters,
+                            encoding: encoding) { (originalResponse: AFDataResponse, result: Result<Success, Failure>) in
             switch result {
             case .success(let response):
                 if successSound {
@@ -154,6 +158,7 @@ final public class IQAPIClient {
     @discardableResult public static func sendRequest<Success>(path: String,
                                                                method: HTTPMethod = .get,
                                                                parameters: Parameters? = nil,
+                                                               encoding: ParameterEncoding? = nil,
                                                                successSound: Bool = false,
                                                                failedSound: Bool = false,
                                                                executeErrorHandlerOnError: Bool = true,
@@ -161,7 +166,10 @@ final public class IQAPIClient {
 
         assert(baseURL != nil, "basseURL is not specified.")
 
-        return _sendRequest(url: baseURL.appendingPathComponent(path), method: method, parameters: parameters) { (originalResponse: AFDataResponse, result: Result<Success, Error>) in
+        return _sendRequest(url: baseURL.appendingPathComponent(path),
+                            method: method,
+                            parameters: parameters,
+                            encoding: encoding) { (originalResponse: AFDataResponse, result: Result<Success, Error>) in
             switch result {
             case .success(let response):
                 if successSound {
@@ -214,6 +222,7 @@ internal extension IQAPIClient {
     @discardableResult private static func _sendRequest<Success, Failure>(url: URLConvertible,
                                                                           method: HTTPMethod = .get,
                                                                           parameters: Parameters? = nil,
+                                                                          encoding: ParameterEncoding? = nil,
                                                                           completionHandler: @escaping (_ originalResponse: AFDataResponse<Data>, _ result: Result<Success, Failure>) -> Void) -> DataRequest {
 
         guard Success.Type.self != Failure.Type.self else {
@@ -256,7 +265,7 @@ internal extension IQAPIClient {
                         modifiedError = nil
                     }
                 } else {
-                    modifiedObject = nil
+                    modifiedObject = data
                     modifiedError = nil
                 }
 
@@ -273,7 +282,22 @@ internal extension IQAPIClient {
                                     let data = try JSONSerialization.data(withJSONObject: modifiedObject, options: [])
                                     do {
                                         success = try Success.decode(from: data) as? Success
-                                    } catch {
+                                    } catch let error {
+                                        success = nil
+                                        successDecodeError = error
+                                    }
+                                } else {
+                                    success = nil
+                                    let message = "\(Success.self) does not confirm to Decodable protocol."
+                                    successDecodeError = NSError(domain: NSStringFromClass(Self.self),
+                                                                 code: NSURLErrorCannotDecodeRawData,
+                                                                 userInfo: [NSLocalizedDescriptionKey: message])
+                                }
+                            } else if let modifiedObject = modifiedObject as? Data {
+                                if let Success = Success.self as? Decodable.Type {
+                                    do {
+                                        success = try Success.decode(from: modifiedObject) as? Success
+                                    } catch let error {
                                         success = nil
                                         successDecodeError = error
                                     }
@@ -302,7 +326,7 @@ internal extension IQAPIClient {
                                 let data = try JSONSerialization.data(withJSONObject: modifiedObject, options: [])
                                 do {
                                     failure = try Failure.decode(from: data) as? Failure
-                                } catch {
+                                } catch let error {
                                     failure = nil
                                     failureDecodeError = error
                                 }
@@ -346,7 +370,7 @@ internal extension IQAPIClient {
                                                 userInfo: [NSLocalizedDescriptionKey: decodeErrorMessage])
                             completionHandler(response, .error(error))
                         }
-                    } catch {
+                    } catch let error {
                         completionHandler(response, .error(error))
                     }
                 } else if let modifiedError = modifiedError {
@@ -384,8 +408,16 @@ internal extension IQAPIClient {
                 }
             }, to: url, method: method, headers: httpHeaders)
         } else {
+
+            let finalEncoding: ParameterEncoding
+            if let encoding = encoding {
+                finalEncoding = encoding
+            } else {
+                finalEncoding = (method == .get ? URLEncoding.default : JSONEncoding.default)
+            }
+
             request = AF.request(url, method: method, parameters: parameters,
-                                 encoding: (method == .get ? URLEncoding.default : JSONEncoding.default), headers: httpHeaders)
+                                 encoding: finalEncoding, headers: httpHeaders)
         }
 
         request.responseData(queue: DispatchQueue.global(qos: .default), completionHandler: finalCompletionHandler)
