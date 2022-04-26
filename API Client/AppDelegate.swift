@@ -8,7 +8,7 @@
 
 import UIKit
 import IQAPIClient
-
+import Alamofire
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 

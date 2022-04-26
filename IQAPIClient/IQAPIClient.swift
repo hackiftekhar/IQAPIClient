@@ -53,7 +53,7 @@ final public class IQAPIClient {
     /// now implement it and show error message from here, no need to write error alert code everywhere
     public static var commonErrorHandlerBlock: ((URLRequest, Parameters?, Data?, Error) -> Void)?
 
-///--------------------------
+/// --------------------------
 ///     responseModifierBlock is used to modify the response before any processing.
 ///     Let's say we have below structure of all success response:-
 //     {
@@ -65,7 +65,7 @@ final public class IQAPIClient {
 //     }
 //     In above case, you are only interested in the inner object which is inside data.
 //      So from responseModifierBlock you should return `.success(response["data"])` where data is a [String:Any]
-///--------------------------
+/// --------------------------
 ///    Let's also assume we another structure of success message
 //    {
 //        "status": 200,
@@ -75,7 +75,7 @@ final public class IQAPIClient {
 //     then you could return the same object you received like `.success(response)`.
 //     Or if you are only interested in "message" and specify returned result type as String like this
 //    `Result<String, FailureModel, Error>)`, then you should return `.success(response["message"])`
-///--------------------------
+/// --------------------------
 ///     Let's also assume we another below structure for failure case
 //     {
 //        "status": 400,
@@ -88,7 +88,7 @@ final public class IQAPIClient {
 //                      userInfo: [NSLocalizedDescriptionKey:response["message"] as! String])
 //     completionHandler(.failure(error))
 
-    public static var responseModifierBlock: ((URLRequest, Any)->Result<Any, Any>)?
+    public static var responseModifierBlock: ((AFDataResponse<Data>, Any)->Result<Any, Any>)?
 
     public static var debuggingEnabled = false
 
@@ -247,7 +247,7 @@ internal extension IQAPIClient {
                 if let json = data.json {
                     /// Asking from responseModifiedBlock to return the modified dictionary which should be processed
                     if let responseModifierBlock = responseModifierBlock {
-                        let modifiedResult = responseModifierBlock(response.request!, json)
+                        let modifiedResult = responseModifierBlock(response, json)
                         switch modifiedResult {
                         case .success(let modified):
                             modifiedObject = modified
@@ -419,7 +419,6 @@ internal extension IQAPIClient {
             request = AF.request(url, method: method, parameters: parameters,
                                  encoding: finalEncoding, headers: httpHeaders)
         }
-
         request.responseData(queue: DispatchQueue.global(qos: .default), completionHandler: finalCompletionHandler)
         return request
     }
