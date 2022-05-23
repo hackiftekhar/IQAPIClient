@@ -44,6 +44,9 @@ final public class IQAPIClient {
     /// Base URL of the API
     public static var baseURL: URL!
 
+    /// Alamofire Setup
+    public static var session = Session.default
+
     /// Some customzed error messages on errors
     public static var malformedResponseErrorMessage = "Looks like we received malformed response from our server."
     public static var unintentedResponseErrorMessage = "Looks like we received unexpected response from our server."
@@ -94,7 +97,7 @@ final public class IQAPIClient {
 
     public static var httpHeaders = HTTPHeaders()
 
-    private static let haptic = UINotificationFeedbackGenerator()
+    internal static let haptic = UINotificationFeedbackGenerator()
 
     public static let jsonDecoder: JSONDecoder = {
         let decoder = JSONDecoder()
@@ -106,6 +109,7 @@ final public class IQAPIClient {
         return decoder
     }()
 
+    // swiftlint:disable line_length
     /// `Success, Failure` either be a `valid JSON type` or must conform to `Decodable` protocol
     @discardableResult public static func sendRequest<Success, Failure>(path: String,
                                                                         method: HTTPMethod = .get,
@@ -114,14 +118,14 @@ final public class IQAPIClient {
                                                                         successSound: Bool = false,
                                                                         failedSound: Bool = false,
                                                                         executeErrorHandlerOnError: Bool = true,
-                                                                        completionHandler: @escaping (_ result: Result<Success, Failure>) -> Void) -> DataRequest {
+                                                                        completionHandler: @escaping (_ result: IQAPIClient.Result<Success, Failure>) -> Void) -> DataRequest {
 
         assert(baseURL != nil, "basseURL is not specified.")
 
         return _sendRequest(url: baseURL.appendingPathComponent(path),
                             method: method,
                             parameters: parameters,
-                            encoding: encoding) { (originalResponse: AFDataResponse, result: Result<Success, Failure>) in
+                            encoding: encoding) { (originalResponse: AFDataResponse, result: IQAPIClient.Result<Success, Failure>) in
             switch result {
             case .success(let response):
                 if successSound {
@@ -169,7 +173,7 @@ final public class IQAPIClient {
         return _sendRequest(url: baseURL.appendingPathComponent(path),
                             method: method,
                             parameters: parameters,
-                            encoding: encoding) { (originalResponse: AFDataResponse, result: Result<Success, Error>) in
+                            encoding: encoding) { (originalResponse: AFDataResponse, result: IQAPIClient.Result<Success, Error>) in
             switch result {
             case .success(let response):
                 if successSound {
@@ -215,15 +219,12 @@ internal extension IQAPIClient {
         static var counter: Int = 0
     }
 
-    // swiftlint:disable identifier_name
-    // swiftlint:disable cyclomatic_complexity
     // swiftlint:disable line_length
-    // swiftlint:disable function_body_length
     @discardableResult private static func _sendRequest<Success, Failure>(url: URLConvertible,
                                                                           method: HTTPMethod = .get,
                                                                           parameters: Parameters? = nil,
                                                                           encoding: ParameterEncoding? = nil,
-                                                                          completionHandler: @escaping (_ originalResponse: AFDataResponse<Data>, _ result: Result<Success, Failure>) -> Void) -> DataRequest {
+                                                                          completionHandler: @escaping (_ originalResponse: AFDataResponse<Data>, _ result: IQAPIClient.Result<Success, Failure>) -> Void) -> DataRequest {
 
         guard Success.Type.self != Failure.Type.self else {
             fatalError("Success \(Success.self) and Failure \(Failure.self) must not be of same type")
@@ -241,147 +242,8 @@ internal extension IQAPIClient {
 
             switch response.result {
             case .success(let data):    /// Successfully got data response from server
-                let modifiedObject: Any?
-                let modifiedError: Error?
-                var isFailure = false
-                if let json = data.json {
-                    /// Asking from responseModifiedBlock to return the modified dictionary which should be processed
-                    if let responseModifierBlock = responseModifierBlock {
-                        let modifiedResult = responseModifierBlock(response, json)
-                        switch modifiedResult {
-                        case .success(let modified):
-                            modifiedObject = modified
-                            modifiedError = nil
-                        case .failure(let modified):
-                            modifiedObject = modified
-                            modifiedError = nil
-                            isFailure = true
-                        case .error(let error):
-                            modifiedObject = nil
-                            modifiedError = error
-                        }
-                    } else {
-                        modifiedObject = json
-                        modifiedError = nil
-                    }
-                } else {
-                    modifiedObject = data
-                    modifiedError = nil
-                }
-
-                if let modifiedObject = modifiedObject {
-                    do {
-                        var successDecodeError: Error?
-                        var failureDecodeError: Error?
-                        if isFailure == false {
-                            let success: Success?
-                            if let response = modifiedObject as? Success {
-                                success = response
-                            } else if JSONSerialization.isValidJSONObject(modifiedObject) {
-                                if let Success = Success.self as? Decodable.Type {
-                                    let data = try JSONSerialization.data(withJSONObject: modifiedObject, options: [])
-                                    do {
-                                        success = try Success.decode(from: data) as? Success
-                                    } catch let error {
-                                        success = nil
-                                        successDecodeError = error
-                                    }
-                                } else {
-                                    success = nil
-                                    let message = "\(Success.self) does not confirm to Decodable protocol."
-                                    successDecodeError = NSError(domain: NSStringFromClass(Self.self),
-                                                                 code: NSURLErrorCannotDecodeRawData,
-                                                                 userInfo: [NSLocalizedDescriptionKey: message])
-                                }
-                            } else if let modifiedObject = modifiedObject as? Data {
-                                if let Success = Success.self as? Decodable.Type {
-                                    do {
-                                        success = try Success.decode(from: modifiedObject) as? Success
-                                    } catch let error {
-                                        success = nil
-                                        successDecodeError = error
-                                    }
-                                } else {
-                                    success = nil
-                                    let message = "\(Success.self) does not confirm to Decodable protocol."
-                                    successDecodeError = NSError(domain: NSStringFromClass(Self.self),
-                                                                 code: NSURLErrorCannotDecodeRawData,
-                                                                 userInfo: [NSLocalizedDescriptionKey: message])
-                                }
-                            } else {
-                                success = nil
-                            }
-
-                            if let success = success {
-                                completionHandler(response, .success(success))
-                                return
-                            }
-                        }
-
-                        let failure: Failure?
-                        if let response = modifiedObject as? Failure {
-                            failure = response
-                        } else if JSONSerialization.isValidJSONObject(modifiedObject) {
-                            if let Failure = Failure.self as? Decodable.Type {
-                                let data = try JSONSerialization.data(withJSONObject: modifiedObject, options: [])
-                                do {
-                                    failure = try Failure.decode(from: data) as? Failure
-                                } catch let error {
-                                    failure = nil
-                                    failureDecodeError = error
-                                }
-                            } else {
-                                failure = nil
-                                let message = "\(Failure.self) does not confirm to Decodable protocol."
-                                failureDecodeError = NSError(domain: NSStringFromClass(Self.self),
-                                                             code: NSURLErrorCannotDecodeRawData,
-                                                             userInfo: [NSLocalizedDescriptionKey: message])
-                            }
-                        } else {
-                            failure = nil
-                        }
-
-                        if let failure = failure {
-                            completionHandler(response, .failure(failure))
-                        } else {
-
-                            if debuggingEnabled, (successDecodeError != nil || failureDecodeError != nil) {
-
-                                var finalMessges = [String]()
-
-                                finalMessges.append("\nReceived \'\(type(of: modifiedObject.self))\' type response.")
-
-                                if let successDecodeError = successDecodeError {
-
-                                    finalMessges.append("Unable to decode server response to \'\(Success.self)\' type.")
-                                    print("\n\(Success.self): \(successDecodeError)")
-                                }
-
-                                if let failureDecodeError = failureDecodeError {
-                                    finalMessges.append("Unable to decode server response to \'\(Failure.self)\' type.")
-                                    print("\n\(Failure.self): \(failureDecodeError)")
-                                }
-
-                                print(finalMessges.joined(separator: "\n\n"))
-                            }
-
-                            let error = NSError(domain: NSStringFromClass(Self.self),
-                                                code: NSURLErrorCannotDecodeRawData,
-                                                userInfo: [NSLocalizedDescriptionKey: decodeErrorMessage])
-                            completionHandler(response, .error(error))
-                        }
-                    } catch let error {
-                        completionHandler(response, .error(error))
-                    }
-                } else if let modifiedError = modifiedError {
-                    completionHandler(response, .error(modifiedError))
-                } else {
-                    let error = NSError(domain: NSStringFromClass(Self.self),
-                                        code: NSURLErrorCannotDecodeRawData,
-                                        userInfo: [NSLocalizedDescriptionKey: decodeErrorMessage])
-                    completionHandler(response, .error(error))
-                }
-
+                let result: IQAPIClient.Result<Success, Failure> = intercept(response: response, data: data)
+                completionHandler(response, result)
             case .failure(let error):   /// Error from the Alamofire
                 completionHandler(response, .error(error))
             }
@@ -392,7 +254,7 @@ internal extension IQAPIClient {
         let request: DataRequest
 
         if isMultipart {
-            request = AF.upload(multipartFormData: { (multipartFormData) in
+            request = session.upload(multipartFormData: { (multipartFormData) in
                 if let parameters = parameters {
                     for (key, value) in parameters {
                         if let data = value as? File {
@@ -416,8 +278,8 @@ internal extension IQAPIClient {
                 finalEncoding = (method == .get ? URLEncoding.default : JSONEncoding.default)
             }
 
-            request = AF.request(url, method: method, parameters: parameters,
-                                 encoding: finalEncoding, headers: httpHeaders)
+            request = session.request(url, method: method, parameters: parameters,
+                                      encoding: finalEncoding, headers: httpHeaders)
         }
         request.responseData(queue: DispatchQueue.global(qos: .default), completionHandler: finalCompletionHandler)
         return request

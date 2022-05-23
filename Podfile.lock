@@ -1,18 +1,18 @@
 PODS:
-  - Alamofire (5.4.1)
-  - AlamofireImage (4.1.0):
-    - Alamofire (~> 5.1)
+  - Alamofire (5.6.1)
+  - AlamofireImage (4.2.0):
+    - Alamofire (~> 5.4)
   - DiffableDataSources (0.4.0):
     - DifferenceKit/AppKitExtension (~> 1.1)
     - DifferenceKit/UIKitExtension (~> 1.1)
-  - DifferenceKit/Core (1.1.5)
-  - DifferenceKit/UIKitExtension (1.1.5):
+  - DifferenceKit/Core (1.2.0)
+  - DifferenceKit/UIKitExtension (1.2.0):
     - DifferenceKit/Core
-  - IQAPIClient (1.0.3):
+  - IQAPIClient (2.0.0):
     - Alamofire (~> 5)
-  - IQListKit (1.2.0):
+  - IQListKit (1.3.0):
     - DiffableDataSources (~> 0.4.0)
-  - SwiftLint (0.43.0)
+  - SwiftLint (0.47.1)
 
 DEPENDENCIES:
   - AlamofireImage
@@ -34,14 +34,14 @@ EXTERNAL SOURCES:
     :path: "."
 
 SPEC CHECKSUMS:
-  Alamofire: 2291f7d21ca607c491dd17642e5d40fdcda0e65c
-  AlamofireImage: c4a2ba349885fb3064feb74d2e547bd42ce9be10
+  Alamofire: 87bd8c952f9a4454320fce00d9cc3de57bcadaf5
+  AlamofireImage: 34a2d90b0e5fe6a5605f85ae4b7b01e784c60192
   DiffableDataSources: 80396cec405c9b29e1e07b55c9be7d11b46c8741
-  DifferenceKit: 516f12e336ed65a3a0665847b5c3cb5cad4bd4ea
-  IQAPIClient: a51b907e8188eb0a3d0176b7a03ea5dab10134d2
-  IQListKit: 7beba0414d654b728cd5cd5cd70f0f7640b62012
-  SwiftLint: 0c645fdc6feed3e390c1701ab3cc669f88b42752
+  DifferenceKit: 5659c430bb7fe45876fa32ce5cba5d6167f0c805
+  IQAPIClient: bd94394e69125cdc563032c019e6d8ac14096b63
+  IQListKit: 134f1d8c0a7ac0be8159c3f93d7af0eee8fa3194
+  SwiftLint: f80f1be7fa96d30e0aa68e58d45d4ea1ccaac519
 
-PODFILE CHECKSUM: 1d3ac9e10f06e73e76567e8ecebb299650f00fd9
+PODFILE CHECKSUM: 7731fc467f169f8c94971930b5a32b76420e28ef
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.11.3

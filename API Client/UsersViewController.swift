@@ -14,8 +14,14 @@ import AlamofireImage
 
 class UsersViewController: UITableViewController {
 
+    #if compiler(>=5.6.0) && canImport(_Concurrency)
     @IBOutlet var activityIndicator: UIActivityIndicatorView!
     @IBOutlet var refreshButton: UIBarButtonItem!
+    #else
+    @IBOutlet var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet var refreshButton: UIBarButtonItem!
+    #endif
+
     var users = [User]()
 
     lazy var list = IQList(listView: tableView, delegateDataSource: self)
@@ -38,18 +44,35 @@ class UsersViewController: UITableViewController {
         activityIndicator.startAnimating()
         refreshButton.isEnabled = false
 
-        IQAPIClient.users { [weak self] result in
-            self?.activityIndicator.stopAnimating()
-            self?.refreshButton.isEnabled = true
+#if compiler(>=5.6.0) && canImport(_Concurrency)
+        Task {
+            do {
+                let users = try await IQAPIClient.asyncAwaitUsers()
+                self.users = users
+                self.refreshUI()
+                self.activityIndicator.stopAnimating()
+                self.refreshButton.isEnabled = true
+            } catch {
+                print(error)
+                self.activityIndicator.stopAnimating()
+                self.refreshButton.isEnabled = true
+            }
+        }
+#else
+        IQAPIClient.users { result in
+
+            self.activityIndicator.stopAnimating()
+            self.refreshButton.isEnabled = true
 
             switch result {
             case .success(let users):
-                self?.users = users
-                self?.refreshUI()
-            case .failure:
-                break
+                self.users = users
+                self.refreshUI()
+            case .failure(let error):
+                print(error)
             }
         }
+#endif
     }
 
     @IBAction func clear(_ sender: UIBarButtonItem) {
