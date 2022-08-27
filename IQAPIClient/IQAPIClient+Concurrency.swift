@@ -34,6 +34,7 @@ extension IQAPIClient {
                                                                method: HTTPMethod = .get,
                                                                parameters: Parameters? = nil,
                                                                encoding: ParameterEncoding? = nil,
+                                                               headers: HTTPHeaders? = nil,
                                                                successSound: Bool = false,
                                                                failedSound: Bool = false,
                                                                executeErrorHandlerOnError: Bool = true) async throws -> Success {
@@ -41,7 +42,7 @@ extension IQAPIClient {
         assert(baseURL != nil, "basseURL is not specified.")
 
         let result: (request: DataRequest, result: IQAPIClient.Result<Success, Error>)
-        result = try await _sendRequest(url: baseURL.appendingPathComponent(path), method: method, parameters: parameters, encoding: encoding)
+        result = try await _sendRequest(url: baseURL.appendingPathComponent(path), method: method, parameters: parameters, encoding: encoding, headers: headers)
 
         switch result.result {
         case .success(let response):
@@ -89,13 +90,26 @@ internal extension IQAPIClient {
     private static func _sendRequest<Success, Failure>(url: URLConvertible,
                                                        method: HTTPMethod = .get,
                                                        parameters: Parameters? = nil,
-                                                       encoding: ParameterEncoding? = nil) async throws -> (request: DataRequest, result: IQAPIClient.Result<Success, Failure>) {
+                                                       encoding: ParameterEncoding? = nil,
+                                                       headers: HTTPHeaders? = nil) async throws -> (request: DataRequest, result: IQAPIClient.Result<Success, Failure>) {
 
         guard Success.Type.self != Failure.Type.self else {
             fatalError("Success \(Success.self) and Failure \(Failure.self) must not be of same type")
         }
 
         RequestCounter.counter += 1
+
+        var httpHeaders: HTTPHeaders
+
+        if let headers = headers {
+            httpHeaders = headers
+
+            for header in self.httpHeaders {
+                httpHeaders.add(header)
+            }
+        } else {
+            httpHeaders = self.httpHeaders
+        }
 
         let requestNumber = RequestCounter.counter
         await printRequestURL(url: url, method: method, headers: httpHeaders,

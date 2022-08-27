@@ -91,7 +91,7 @@ final public class IQAPIClient {
 //                      userInfo: [NSLocalizedDescriptionKey:response["message"] as! String])
 //     completionHandler(.failure(error))
 
-    public static var responseModifierBlock: ((AFDataResponse<Data>, Any)->Result<Any, Any>)?
+    public static var responseModifierBlock: ((AFDataResponse<Data>, Any)->IQAPIClient.Result<Any, Any>)?
 
     public static var debuggingEnabled = false
 
@@ -115,6 +115,7 @@ final public class IQAPIClient {
                                                                         method: HTTPMethod = .get,
                                                                         parameters: Parameters? = nil,
                                                                         encoding: ParameterEncoding? = nil,
+                                                                        headers: HTTPHeaders? = nil,
                                                                         successSound: Bool = false,
                                                                         failedSound: Bool = false,
                                                                         executeErrorHandlerOnError: Bool = true,
@@ -125,7 +126,9 @@ final public class IQAPIClient {
         return _sendRequest(url: baseURL.appendingPathComponent(path),
                             method: method,
                             parameters: parameters,
-                            encoding: encoding) { (originalResponse: AFDataResponse, result: IQAPIClient.Result<Success, Failure>) in
+                            encoding: encoding,
+                            headers: headers,
+                            completionHandler: { (originalResponse: AFDataResponse, result: IQAPIClient.Result<Success, Failure>) in
             switch result {
             case .success(let response):
                 if successSound {
@@ -155,7 +158,7 @@ final public class IQAPIClient {
                     }
                 }
             }
-        }
+        })
     }
 
     /// `Success, Failure` either be a `valid JSON type` or must conform to `Decodable` protocol
@@ -163,6 +166,7 @@ final public class IQAPIClient {
                                                                method: HTTPMethod = .get,
                                                                parameters: Parameters? = nil,
                                                                encoding: ParameterEncoding? = nil,
+                                                               headers: HTTPHeaders? = nil,
                                                                successSound: Bool = false,
                                                                failedSound: Bool = false,
                                                                executeErrorHandlerOnError: Bool = true,
@@ -173,7 +177,9 @@ final public class IQAPIClient {
         return _sendRequest(url: baseURL.appendingPathComponent(path),
                             method: method,
                             parameters: parameters,
-                            encoding: encoding) { (originalResponse: AFDataResponse, result: IQAPIClient.Result<Success, Error>) in
+                            encoding: encoding,
+                            headers: headers,
+                            completionHandler: { (originalResponse: AFDataResponse, result: IQAPIClient.Result<Success, Error>) in
             switch result {
             case .success(let response):
                 if successSound {
@@ -208,7 +214,7 @@ final public class IQAPIClient {
                     }
                 }
             }
-        }
+        })
     }
 }
 
@@ -224,6 +230,7 @@ internal extension IQAPIClient {
                                                                           method: HTTPMethod = .get,
                                                                           parameters: Parameters? = nil,
                                                                           encoding: ParameterEncoding? = nil,
+                                                                          headers: HTTPHeaders? = nil,
                                                                           completionHandler: @escaping (_ originalResponse: AFDataResponse<Data>, _ result: IQAPIClient.Result<Success, Failure>) -> Void) -> DataRequest {
 
         guard Success.Type.self != Failure.Type.self else {
@@ -231,6 +238,18 @@ internal extension IQAPIClient {
         }
 
         RequestCounter.counter += 1
+
+        var httpHeaders: HTTPHeaders
+
+        if let headers = headers {
+            httpHeaders = headers
+
+            for header in self.httpHeaders {
+                httpHeaders.add(header)
+            }
+        } else {
+            httpHeaders = self.httpHeaders
+        }
 
         let requestNumber = RequestCounter.counter
         printRequestURL(url: url, method: method, headers: httpHeaders,
