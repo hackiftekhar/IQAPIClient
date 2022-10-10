@@ -119,6 +119,7 @@ final public class IQAPIClient {
                                                                         successSound: Bool = false,
                                                                         failedSound: Bool = false,
                                                                         executeErrorHandlerOnError: Bool = true,
+                                                                        forceMultipart: Bool = false,
                                                                         completionHandler: @escaping (_ result: IQAPIClient.Result<Success, Failure>) -> Void) -> DataRequest {
 
         assert(baseURL != nil, "basseURL is not specified.")
@@ -128,6 +129,7 @@ final public class IQAPIClient {
                             parameters: parameters,
                             encoding: encoding,
                             headers: headers,
+                            forceMultipart: forceMultipart,
                             completionHandler: { (originalResponse: AFDataResponse, result: IQAPIClient.Result<Success, Failure>) in
             switch result {
             case .success(let response):
@@ -170,6 +172,7 @@ final public class IQAPIClient {
                                                                successSound: Bool = false,
                                                                failedSound: Bool = false,
                                                                executeErrorHandlerOnError: Bool = true,
+                                                               forceMultipart: Bool = false,
                                                                completionHandler: @escaping (_ result: Swift.Result<Success, Error>) -> Void) -> DataRequest {
 
         assert(baseURL != nil, "basseURL is not specified.")
@@ -179,6 +182,7 @@ final public class IQAPIClient {
                             parameters: parameters,
                             encoding: encoding,
                             headers: headers,
+                            forceMultipart: forceMultipart,
                             completionHandler: { (originalResponse: AFDataResponse, result: IQAPIClient.Result<Success, Error>) in
             switch result {
             case .success(let response):
@@ -226,11 +230,13 @@ internal extension IQAPIClient {
     }
 
     // swiftlint:disable line_length
+    // swiftlint:disable function_body_length
     @discardableResult private static func _sendRequest<Success, Failure>(url: URLConvertible,
                                                                           method: HTTPMethod = .get,
                                                                           parameters: Parameters? = nil,
                                                                           encoding: ParameterEncoding? = nil,
                                                                           headers: HTTPHeaders? = nil,
+                                                                          forceMultipart: Bool = false,
                                                                           completionHandler: @escaping (_ originalResponse: AFDataResponse<Data>, _ result: IQAPIClient.Result<Success, Failure>) -> Void) -> DataRequest {
 
         guard Success.Type.self != Failure.Type.self else {
@@ -272,7 +278,7 @@ internal extension IQAPIClient {
 
         let request: DataRequest
 
-        if isMultipart {
+        if isMultipart || forceMultipart {
             request = session.upload(multipartFormData: { (multipartFormData) in
                 if let parameters = parameters {
                     for (key, value) in parameters {

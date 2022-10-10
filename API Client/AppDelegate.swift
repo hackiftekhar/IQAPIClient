@@ -49,7 +49,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         // Common error handler block is common for all requests, so we could just write UIAlertController
         // presentation logic at single place for showing error from any API response.
-        IQAPIClient.commonErrorHandlerBlock = { (request, requestParameters, responseData, error) in
+        IQAPIClient.commonErrorHandlerBlock = { (_, _, _, error) in
 
             switch (error as NSError).code {
             case NSURLClientError.unauthorized401.rawValue:
@@ -78,7 +78,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
 
-        IQAPIClient.responseModifierBlock = { (request, response) in
+        IQAPIClient.responseModifierBlock = { (_, response) in
 
             guard let response = response as? [String: Any] else {
                 let error = NSError(domain: "ServerError", code: NSURLErrorBadServerResponse,

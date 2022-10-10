@@ -37,12 +37,13 @@ extension IQAPIClient {
                                                                headers: HTTPHeaders? = nil,
                                                                successSound: Bool = false,
                                                                failedSound: Bool = false,
+                                                               forceMultipart: Bool = false,
                                                                executeErrorHandlerOnError: Bool = true) async throws -> Success {
 
         assert(baseURL != nil, "basseURL is not specified.")
 
         let result: (request: DataRequest, result: IQAPIClient.Result<Success, Error>)
-        result = try await _sendRequest(url: baseURL.appendingPathComponent(path), method: method, parameters: parameters, encoding: encoding, headers: headers)
+        result = try await _sendRequest(url: baseURL.appendingPathComponent(path), method: method, parameters: parameters, encoding: encoding, forceMultipart: forceMultipart, headers: headers)
 
         switch result.result {
         case .success(let response):
@@ -87,10 +88,12 @@ internal extension IQAPIClient {
 
     // swiftlint:disable line_length
     // swiftlint:disable function_body_length
+    // swiftlint:disable cyclomatic_complexity
     private static func _sendRequest<Success, Failure>(url: URLConvertible,
                                                        method: HTTPMethod = .get,
                                                        parameters: Parameters? = nil,
                                                        encoding: ParameterEncoding? = nil,
+                                                       forceMultipart: Bool = false,
                                                        headers: HTTPHeaders? = nil) async throws -> (request: DataRequest, result: IQAPIClient.Result<Success, Failure>) {
 
         guard Success.Type.self != Failure.Type.self else {
@@ -119,7 +122,7 @@ internal extension IQAPIClient {
 
         let request: DataRequest
 
-        if isMultipart {
+        if isMultipart || forceMultipart {
             request = session.upload(multipartFormData: { (multipartFormData) in
                 if let parameters = parameters {
                     for (key, value) in parameters {
