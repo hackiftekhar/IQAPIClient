@@ -39,6 +39,30 @@ internal extension Dictionary where Key == String {
         }
 
         do {
+            let data = try JSONSerialization.data(withJSONObject: self, options: [])
+            return data
+        } catch let error {
+            print(error)
+        }
+
+        return nil
+    }
+
+    var prettyJsonString: String? {
+        guard let data = prettyData else {
+            return nil
+        }
+        return String(data: data, encoding: String.Encoding.utf8)
+    }
+
+    var prettyData: Data? {
+
+        guard JSONSerialization.isValidJSONObject(self) else {
+            print("Invalid JSON")
+            return nil
+        }
+
+        do {
             let data = try JSONSerialization.data(withJSONObject: self, options: .prettyPrinted)
             return data
         } catch let error {

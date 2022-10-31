@@ -34,6 +34,21 @@ internal extension Data {
             return nil
         }
         do {
+            let data = try JSONSerialization.data(withJSONObject: json, options: [])
+            return data.string
+        } catch let error {
+            print(error)
+        }
+
+        return nil
+    }
+
+    var prettyJsonString: String? {
+        guard let json = json, JSONSerialization.isValidJSONObject(json) else {
+            print("Invalid JSON")
+            return nil
+        }
+        do {
             let data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
             return data.string
         } catch let error {

@@ -36,21 +36,9 @@ internal extension IQAPIClient {
                 print("(\(requestNumber)). Headers:\(headers)")
             }
 
-            var param = [String: Any]()
+            let parameters = self.convertFileToPrettyString(parameters: parameters) as? [String: Any]
 
-            for (key, value) in parameters ?? [:] {
-                if let file = value as? File {
-                    var fileAttributes: [String: Any] = ["name": file.fileName,
-                                                         "type": file.mimeType,
-                                                         "size": file.data.count]
-                    fileAttributes["url"] = file.fileURL?.absoluteString
-                    param[key] = fileAttributes
-                } else {
-                    param[key] = value
-                }
-            }
-
-            if let jsonString = parameters?.jsonString {
+            if let jsonString = parameters?.prettyJsonString {
                 print("(\(requestNumber)). \(jsonString)")
             }
 
@@ -70,7 +58,7 @@ internal extension IQAPIClient {
             switch response.result {
             case .success(let data):
 
-                if let jsonString = data.jsonString {
+                if let jsonString = data.prettyJsonString {
                     print("(\(requestNumber)). \(jsonString)")
                 } else if let jsonString = data.string {
                     print("(\(requestNumber)). \(jsonString)")
@@ -101,21 +89,9 @@ internal extension IQAPIClient {
                 print("(\(requestNumber)). Headers:\(headers)")
             }
 
-            var param = [String: Any]()
+            let parameters = self.convertFileToPrettyString(parameters: parameters) as? [String: Any]
 
-            for (key, value) in parameters ?? [:] {
-                if let file = value as? File {
-                    var fileAttributes: [String: Any] = ["name": file.fileName,
-                                                         "type": file.mimeType,
-                                                         "size": file.data.count]
-                    fileAttributes["url"] = file.fileURL?.absoluteString
-                    param[key] = fileAttributes
-                } else {
-                    param[key] = value
-                }
-            }
-
-            if let jsonString = parameters?.jsonString {
+            if let jsonString = parameters?.prettyJsonString {
                 print("(\(requestNumber)). \(jsonString)")
             }
 
@@ -136,7 +112,7 @@ internal extension IQAPIClient {
             switch response.result {
             case .success(let data):
 
-                if let jsonString = data.jsonString {
+                if let jsonString = data.prettyJsonString {
                     print("(\(requestNumber)). \(jsonString)")
                 } else if let jsonString = data.string {
                     print("(\(requestNumber)). \(jsonString)")
@@ -156,4 +132,30 @@ internal extension IQAPIClient {
         }
     }
 #endif
+
+    private static func convertFileToPrettyString(parameters: Any?) -> Any? {
+
+        switch parameters {
+        case var array as [Any]:
+            for (index, object) in array.enumerated() {
+                if let object = self.convertFileToPrettyString(parameters: object) {
+                    array[index] = object
+                }
+            }
+
+            return array
+
+        case var dictionary as [String: Any]:
+
+            for (key, object) in dictionary {
+                dictionary[key] = self.convertFileToPrettyString(parameters: object)
+            }
+
+            return dictionary
+        case let file as File:
+            return file.description
+        default:
+            return parameters
+        }
+    }
 }

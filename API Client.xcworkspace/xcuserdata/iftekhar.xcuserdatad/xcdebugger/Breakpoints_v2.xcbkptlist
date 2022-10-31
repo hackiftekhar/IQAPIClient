@@ -7,54 +7,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "15A6977C-2231-494B-BC4E-69236A54741B"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Pods/Alamofire/Source/MultipartFormData.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "346"
-            endingLineNumber = "346"
-            landmarkName = "MultipartFormData"
-            landmarkType = "3">
-            <Locations>
-               <Location
-                  uuid = "15A6977C-2231-494B-BC4E-69236A54741B - b66ee519634f762c"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Alamofire.MultipartFormData.writeEncodedData(to: Foundation.URL) throws -&gt; ()"
-                  moduleName = "Alamofire"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/iftekhar/Projects/Projects/Internal/Github/API%20Client/Pods/Alamofire/Source/MultipartFormData.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "348"
-                  endingLineNumber = "348"
-                  offsetFromSymbolStart = "343">
-               </Location>
-               <Location
-                  uuid = "15A6977C-2231-494B-BC4E-69236A54741B - b66ee519634f762c"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Alamofire.MultipartFormData.writeEncodedData(to: Foundation.URL) throws -&gt; ()"
-                  moduleName = "Alamofire"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/iftekhar/Projects/Projects/Internal/Github/API%20Client/Pods/Alamofire/Source/MultipartFormData.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "348"
-                  endingLineNumber = "348"
-                  offsetFromSymbolStart = "373">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "8D840A19-5D1B-4C4E-A39B-7BF30EEE6473"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
@@ -82,22 +34,6 @@
             endingLineNumber = "612"
             landmarkName = "Upload"
             landmarkType = "14">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "E97F8C97-FF38-459D-823F-9B8A4BC723FC"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "IQAPIClient/IQAPIClient.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "281"
-            endingLineNumber = "281"
-            landmarkName = "_sendRequest(url:method:parameters:encoding:headers:forceMultipart:completionHandler:)"
-            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
