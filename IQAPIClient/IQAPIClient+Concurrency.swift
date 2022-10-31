@@ -87,7 +87,6 @@ internal extension IQAPIClient {
     }
 
     // swiftlint:disable line_length
-    // swiftlint:disable function_body_length
     // swiftlint:disable cyclomatic_complexity
     private static func _sendRequest<Success, Failure>(url: URLConvertible,
                                                        method: HTTPMethod = .get,

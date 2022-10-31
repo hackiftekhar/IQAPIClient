@@ -45,7 +45,9 @@ final public class IQAPIClient {
     public static var baseURL: URL!
 
     /// Alamofire Setup
-    public static var session = Session.default
+    public static var session = Session(rootQueue: DispatchQueue(label: "com.iqapiclient.rootQueue"))
+    private static let responseQueue: DispatchQueue = DispatchQueue(label: "com.iqapiclient.responseQueue",
+                                                                    attributes: .concurrent)
 
     /// Some customzed error messages on errors
     public static var malformedResponseErrorMessage = "Looks like we received malformed response from our server."
@@ -230,7 +232,6 @@ internal extension IQAPIClient {
     }
 
     // swiftlint:disable line_length
-    // swiftlint:disable function_body_length
     @discardableResult private static func _sendRequest<Success, Failure>(url: URLConvertible,
                                                                           method: HTTPMethod = .get,
                                                                           parameters: Parameters? = nil,
@@ -296,7 +297,7 @@ internal extension IQAPIClient {
             request = session.request(url, method: method, parameters: parameters,
                                       encoding: finalEncoding, headers: httpHeaders)
         }
-        request.responseData(queue: DispatchQueue.global(qos: .default), completionHandler: finalCompletionHandler)
+        request.responseData(queue: responseQueue, completionHandler: finalCompletionHandler)
         return request
     }
 
@@ -329,6 +330,7 @@ internal extension IQAPIClient {
         }
     }
 
+    // swiftlint:disable cyclomatic_complexity
     private static func addToMultipartFormData(_ multipartFormData: MultipartFormData, fromKey key: String, parameters: Any) {
 
         switch parameters {

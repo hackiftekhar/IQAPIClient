@@ -50,7 +50,6 @@ public struct File: Hashable, Codable {
             fileDescrioptions.append("fileURL: \"\(fileURL)\"")
         }
 
-
         return "File(\(fileDescrioptions.joined(separator: ", ")))"
     }
 }
