@@ -45,7 +45,9 @@ final public class IQAPIClient {
     public static var baseURL: URL!
 
     /// Alamofire Setup
-    public static var session = Session(rootQueue: DispatchQueue(label: "com.iqapiclient.rootQueue"))
+    public static var session = Session(rootQueue: DispatchQueue(label: "com.iqapiclient.rootQueue"),
+                                        serializationQueue: DispatchQueue(label: "com.iqapiclient.serializationQueue",
+                                                                          attributes: .concurrent))
     private static let responseQueue: DispatchQueue = DispatchQueue(label: "com.iqapiclient.responseQueue",
                                                                     attributes: .concurrent)
 
@@ -108,6 +110,16 @@ final public class IQAPIClient {
         decoder.nonConformingFloatDecodingStrategy = .convertFromString(positiveInfinity: "+Infinity",
                                                                         negativeInfinity: "-Infinity",
                                                                         nan: "NaN")
+        return decoder
+    }()
+
+    public static let jsonEncoder: JSONEncoder = {
+        let decoder = JSONEncoder()
+        decoder.dateEncodingStrategy = .secondsSince1970
+        decoder.dataEncodingStrategy = .deferredToData
+        decoder.nonConformingFloatEncodingStrategy = .convertToString(positiveInfinity: "+Infinity",
+                                                                      negativeInfinity: "-Infinity",
+                                                                      nan: "NaN")
         return decoder
     }()
 
@@ -246,16 +258,12 @@ internal extension IQAPIClient {
 
         RequestCounter.counter += 1
 
-        var httpHeaders: HTTPHeaders
+        var httpHeaders: HTTPHeaders = self.httpHeaders
 
         if let headers = headers {
-            httpHeaders = headers
-
-            for header in self.httpHeaders {
+            for header in headers {
                 httpHeaders.add(header)
             }
-        } else {
-            httpHeaders = self.httpHeaders
         }
 
         let requestNumber = RequestCounter.counter
