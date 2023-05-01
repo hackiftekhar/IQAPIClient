@@ -24,7 +24,7 @@ import Foundation
 
 internal extension Decodable {
 
-    static func decode(from data: Data) throws -> Self? {
+    static func decode(from data: Data) throws -> Self {
         let object = try IQAPIClient.jsonDecoder.decode(self, from: data)
         return object
     }

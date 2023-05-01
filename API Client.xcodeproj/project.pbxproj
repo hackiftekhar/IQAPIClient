@@ -473,6 +473,7 @@
 			baseConfigurationReference = 2123EFA8F8BAB54CCF9ED5F3 /* Pods-API Client.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_MODULES_AUTOLINK = NO;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8QV6V9U6Y9;
 				INFOPLIST_FILE = "API Client/Info.plist";
@@ -494,6 +495,7 @@
 			baseConfigurationReference = 281781CA723A223CB1FE086C /* Pods-API Client.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_MODULES_AUTOLINK = NO;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8QV6V9U6Y9;
 				INFOPLIST_FILE = "API Client/Info.plist";

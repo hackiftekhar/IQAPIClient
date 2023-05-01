@@ -141,7 +141,7 @@ internal extension IQAPIClient {
 
         let response = await request.serializingData().response
         async let result = response.result
-        await printResponse(url: url, response: response, requestNumber: requestNumber)
+        await printResponse(response: response, requestNumber: requestNumber)
 
         switch await result {
         case .success(let data):    /// Successfully got data response from server

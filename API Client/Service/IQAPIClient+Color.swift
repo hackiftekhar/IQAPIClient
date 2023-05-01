@@ -14,7 +14,16 @@ extension IQAPIClient {
     @discardableResult
     static func colors(completionHandler: @escaping (_ result: Swift.Result<[Color], Error>) -> Void) -> DataRequest {
         let path = ITAPIPath.colors.rawValue
-        return sendRequest(path: path, completionHandler: completionHandler)
+        let request = sendRequest(path: path, completionHandler: completionHandler).validate { request, response, data in
+            if response.statusCode == 401 {
+                let error = NSError(domain: "Domain", code: response.statusCode, userInfo: [NSLocalizedDescriptionKey: "Not found"])
+                return Request.ValidationResult.failure(error)
+            } else {
+                return Request.ValidationResult.success(())
+            }
+        }
+
+        return request
     }
 
     @discardableResult

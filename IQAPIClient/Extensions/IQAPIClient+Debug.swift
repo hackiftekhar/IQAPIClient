@@ -50,10 +50,32 @@ internal extension IQAPIClient {
         }
     }
 
-    static func printResponse(url: URLConvertible, response: AFDataResponse<Data>, requestNumber: Int) {
+    static func printRequestURL(url: URLConvertible, method: HTTPMethod,
+                                headers: HTTPHeaders?, parameters: Encodable?, requestNumber: Int) {
         if debuggingEnabled {
             logQueue.async {
-                print("\n(\(requestNumber)). Response Start \(response.request?.httpMethod ?? "GET"): \(url) --------")
+                print("\n(\(requestNumber)). Request Start \(method.rawValue): \(url) --------")
+
+                if let headers = headers {
+                    print("(\(requestNumber)). Headers:\(headers)")
+                }
+
+                if let parameters = parameters {
+                    let data = try? jsonEncoder.encode(parameters)
+                    if let jsonString = data?.prettyJsonString {
+                        print("(\(requestNumber)). \(jsonString)")
+                    }
+                }
+
+                print("(\(requestNumber)). Request End --------\n")
+            }
+        }
+    }
+
+    static func printResponse(response: AFDataResponse<Data>, requestNumber: Int) {
+        if debuggingEnabled {
+            logQueue.async {
+                print("\n(\(requestNumber)). Response Start \(response.request?.httpMethod ?? "GET"): \(String(describing: response.request?.url)) --------")
 
                 if let header = response.response {
                     print("(\(requestNumber)). StatusCode: \(header.statusCode)")
@@ -106,9 +128,9 @@ internal extension IQAPIClient {
     }
 
     @available(iOS 13.0.0, *)
-    static func printResponse(url: URLConvertible, response: AFDataResponse<Data>, requestNumber: Int) async {
+    static func printResponse(response: AFDataResponse<Data>, requestNumber: Int) async {
         if debuggingEnabled {
-            print("\n(\(requestNumber)). Response Start \(response.request?.httpMethod ?? "GET"): \(url) --------")
+            print("\n(\(requestNumber)). Response Start \(response.request?.httpMethod ?? "GET"): \(String(describing: response.request?.url)) --------")
 
             if let header = response.response {
                 print("(\(requestNumber)). StatusCode: \(header.statusCode)")
