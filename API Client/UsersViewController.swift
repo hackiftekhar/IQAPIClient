@@ -43,27 +43,29 @@ class UsersViewController: UITableViewController {
 
         activityIndicator.startAnimating()
         refreshButton.isEnabled = false
-
+        
 #if compiler(>=5.6.0) && canImport(_Concurrency)
-        Task {
-            do {
-                let users = try await IQAPIClient.asyncAwaitUsers()
-                self.users = users
-                self.refreshUI()
-                self.activityIndicator.stopAnimating()
-                self.refreshButton.isEnabled = true
-            } catch {
-                print(error)
-                self.activityIndicator.stopAnimating()
-                self.refreshButton.isEnabled = true
+        if #available(iOS 13.0, *) {
+            Task {
+                do {
+                    let users = try await IQAPIClient.asyncAwaitUsers()
+                    self.users = users
+                    self.refreshUI()
+                    self.activityIndicator.stopAnimating()
+                    self.refreshButton.isEnabled = true
+                } catch {
+                    print(error)
+                    self.activityIndicator.stopAnimating()
+                    self.refreshButton.isEnabled = true
+                }
             }
         }
 #else
         IQAPIClient.users { result in
-
+            
             self.activityIndicator.stopAnimating()
             self.refreshButton.isEnabled = true
-
+            
             switch result {
             case .success(let users):
                 self.users = users
