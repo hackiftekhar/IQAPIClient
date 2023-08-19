@@ -30,7 +30,6 @@ import Alamofire
 // https://www.json4swift.com       Preserves snake_cases
 // https://json2kt.com/             It change the snake_case to camelCase but format the code  beautifully
 // https://github.com/insanoid/SwiftyJSONAccelerator    This is an app which can be installed on your mac
-/// Reference to `Session.default` for quick bootstrapping and examples.
 
 final public class IQAPIClient {
 
