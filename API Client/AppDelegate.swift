@@ -42,14 +42,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return parentController
         }
 
-        IQAPIClient.baseURL = URL(string: "https://reqres.in/api")
-        IQAPIClient.httpHeaders["Content-Type"] = "application/json"
-        IQAPIClient.httpHeaders["Accept"] = "application/json"
-        IQAPIClient.debuggingEnabled = true
+        IQAPIClient.default.baseURL = URL(string: "https://reqres.in/api")
+        IQAPIClient.default.httpHeaders["Content-Type"] = "application/json"
+        IQAPIClient.default.httpHeaders["Accept"] = "application/json"
+        IQAPIClient.default.debuggingEnabled = true
 
         // Common error handler block is common for all requests, so we could just write UIAlertController
         // presentation logic at single place for showing error from any API response.
-        IQAPIClient.commonErrorHandlerBlock = { (_, _, _, error) in
+        IQAPIClient.default.commonErrorHandlerBlock = { (_, _, _, error) in
 
             switch (error as NSError).code {
             case NSURLClientError.unauthorized401.rawValue:
@@ -78,11 +78,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
 
-        IQAPIClient.responseModifierBlock = { (_, response) in
+        IQAPIClient.default.responseModifierBlock = { (_, response) in
 
             guard let response = response as? [String: Any] else {
                 let error = NSError(domain: "ServerError", code: NSURLErrorBadServerResponse,
-                                    userInfo: [NSLocalizedDescriptionKey: IQAPIClient.unintentedResponseErrorMessage])
+                                    userInfo: [NSLocalizedDescriptionKey: IQAPIClient.default.unintentedResponseErrorMessage])
                return .error(error)
             }
 
@@ -98,7 +98,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 return .success(data)
             } else {
                 let error = NSError(domain: "ServerError", code: NSURLErrorBadServerResponse,
-                                    userInfo: [NSLocalizedDescriptionKey: IQAPIClient.unintentedResponseErrorMessage])
+                                    userInfo: [NSLocalizedDescriptionKey: IQAPIClient.default.unintentedResponseErrorMessage])
                return .error(error)
             }
         }

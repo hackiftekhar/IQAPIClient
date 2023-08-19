@@ -42,7 +42,7 @@ class UserViewController: UITableViewController {
 
         activityIndicator.startAnimating()
 
-        IQAPIClient.user(id: user.id) { [weak self] (result) in
+        IQAPIClient.default.user(id: user.id) { [weak self] (result) in
 
             self?.activityIndicator.stopAnimating()
 

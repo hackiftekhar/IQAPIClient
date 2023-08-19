@@ -29,17 +29,17 @@ internal extension IQAPIClient {
 
     private static let logQueue: DispatchQueue = DispatchQueue(label: "com.iqapiclient.logQueue", qos: .background)
 
-    static func printRequestURL(url: URLConvertible, method: HTTPMethod,
-                                headers: HTTPHeaders?, parameters: [String: Any]?, requestNumber: Int) {
+    func printRequestURL(url: URLConvertible, method: HTTPMethod,
+                         headers: HTTPHeaders?, parameters: [String: Any]?, requestNumber: Int) {
         if debuggingEnabled {
-            logQueue.async {
+            Self.logQueue.async {
                 print("\n(\(requestNumber)). Request Start \(method.rawValue): \(url) --------")
-
+                
                 if let headers = headers {
                     print("(\(requestNumber)). Headers:\(headers)")
                 }
 
-                let parameters = self.convertFileToPrettyString(parameters: parameters) as? [String: Any]
+                let parameters = Self.convertFileToPrettyString(parameters: parameters) as? [String: Any]
 
                 if let jsonString = parameters?.prettyJsonString {
                     print("(\(requestNumber)). \(jsonString)")
@@ -50,10 +50,10 @@ internal extension IQAPIClient {
         }
     }
 
-    static func printRequestURL(url: URLConvertible, method: HTTPMethod,
-                                headers: HTTPHeaders?, parameters: Encodable?, requestNumber: Int) {
+    func printRequestURL(url: URLConvertible, method: HTTPMethod,
+                         headers: HTTPHeaders?, parameters: Encodable?, requestNumber: Int) {
         if debuggingEnabled {
-            logQueue.async {
+            Self.logQueue.async {
                 print("\n(\(requestNumber)). Request Start \(method.rawValue): \(url) --------")
 
                 if let headers = headers {
@@ -61,7 +61,7 @@ internal extension IQAPIClient {
                 }
 
                 if let parameters = parameters {
-                    let data = try? jsonEncoder.encode(parameters)
+                    let data = try? self.jsonEncoder.encode(parameters)
                     if let jsonString = data?.prettyJsonString {
                         print("(\(requestNumber)). \(jsonString)")
                     }
@@ -72,9 +72,9 @@ internal extension IQAPIClient {
         }
     }
 
-    static func printResponse(response: AFDataResponse<Data>, requestNumber: Int) {
+    func printResponse(response: AFDataResponse<Data>, requestNumber: Int) {
         if debuggingEnabled {
-            logQueue.async {
+            Self.logQueue.async {
                 print("\n(\(requestNumber)). Response Start \(response.request?.httpMethod ?? "GET"): \(String(describing: response.request?.url)) --------")
 
                 if let header = response.response {
@@ -108,8 +108,8 @@ internal extension IQAPIClient {
 
 #if compiler(>=5.6.0) && canImport(_Concurrency)
     @available(iOS 13.0.0, *)
-    static func printRequestURL(url: URLConvertible, method: HTTPMethod,
-                                headers: HTTPHeaders?, parameters: [String: Any]?, requestNumber: Int) async {
+    func printRequestURL(url: URLConvertible, method: HTTPMethod,
+                         headers: HTTPHeaders?, parameters: [String: Any]?, requestNumber: Int) async {
         if debuggingEnabled {
             print("\n(\(requestNumber)). Request Start \(method.rawValue): \(url) --------")
 
@@ -117,7 +117,7 @@ internal extension IQAPIClient {
                 print("(\(requestNumber)). Headers:\(headers)")
             }
 
-            let parameters = self.convertFileToPrettyString(parameters: parameters) as? [String: Any]
+            let parameters = Self.convertFileToPrettyString(parameters: parameters) as? [String: Any]
 
             if let jsonString = parameters?.prettyJsonString {
                 print("(\(requestNumber)). \(jsonString)")
@@ -128,7 +128,7 @@ internal extension IQAPIClient {
     }
 
     @available(iOS 13.0.0, *)
-    static func printResponse(response: AFDataResponse<Data>, requestNumber: Int) async {
+    func printResponse(response: AFDataResponse<Data>, requestNumber: Int) async {
         if debuggingEnabled {
             print("\n(\(requestNumber)). Response Start \(response.request?.httpMethod ?? "GET"): \(String(describing: response.request?.url)) --------")
 

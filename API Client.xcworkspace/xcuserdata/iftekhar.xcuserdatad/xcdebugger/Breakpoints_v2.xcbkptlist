@@ -36,21 +36,5 @@
             landmarkType = "14">
          </BreakpointContent>
       </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "9E45B609-0478-42E0-BED8-8898302F2D44"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "API Client/Service/IQAPIClient+Color.swift"
-            startingColumnNumber = "23"
-            endingColumnNumber = "34"
-            startingLineNumber = "17"
-            endingLineNumber = "17"
-            landmarkName = "colors(completionHandler:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

@@ -10,10 +10,11 @@ import IQAPIClient
 import Alamofire
 
 extension IQAPIClient {
-
+    
     @discardableResult
-    static func colors(completionHandler: @escaping (_ result: Swift.Result<[Color], Error>) -> Void) -> DataRequest {
+    func colors(completionHandler: @escaping (_ result: Swift.Result<[Color], Error>) -> Void) -> DataRequest {
         let path = ITAPIPath.colors.rawValue
+        
         let request = sendRequest(path: path, completionHandler: completionHandler).validate { request, response, data in
             if response.statusCode == 401 {
                 let error = NSError(domain: "Domain", code: response.statusCode, userInfo: [NSLocalizedDescriptionKey: "Not found"])
@@ -22,13 +23,12 @@ extension IQAPIClient {
                 return Request.ValidationResult.success(())
             }
         }
-
+        
         return request
     }
-
+    
     @discardableResult
-    static func color(id: Int,
-                      completionHandler: @escaping (_ result: Swift.Result<Color, Error>) -> Void) -> DataRequest {
+    func color(id: Int, completionHandler: @escaping (_ result: Swift.Result<Color, Error>) -> Void) -> DataRequest {
         let path = ITAPIPath.colors.rawValue + "/\(id)"
         return sendRequest(path: path, completionHandler: completionHandler)
     }

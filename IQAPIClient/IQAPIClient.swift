@@ -24,7 +24,13 @@ import UIKit
 import Alamofire
 
 // If you would like to convert your JSON responses to model online,
-// then https://jsonmaster.github.io/ or https://app.quicktype.io/ site will help you to do it quickly.
+// then you could try these sites
+// https://jsonmaster.github.io
+// https://app.quicktype.io         Change snake_case to camelCase
+// https://www.json4swift.com       Preserves snake_cases
+// https://json2kt.com/             It change the snake_case to camelCase but format the code  beautifully
+// https://github.com/insanoid/SwiftyJSONAccelerator    This is an app which can be installed on your mac
+/// Reference to `Session.default` for quick bootstrapping and examples.
 
 final public class IQAPIClient {
 
@@ -41,24 +47,42 @@ final public class IQAPIClient {
 
     }
 
+    public static let `default` = IQAPIClient()
+
+    init(baseURL: URL? = nil, identifier: String? = nil) {
+        self.baseURL = baseURL
+
+        var rootQueueName: String = "com.iqapiclient.rootQueue"
+        var serializationQueueName: String = "com.iqapiclient.serializationQueue"
+        var responseQueueName: String = "com.iqapiclient.responseQueue"
+        if let baseURL = baseURL {
+            rootQueueName += "_\(baseURL.absoluteString)"
+            serializationQueueName += "_\(baseURL.absoluteString)"
+            responseQueueName += "_\(baseURL.absoluteString)"
+        }
+
+        session = Session(rootQueue: DispatchQueue(label: rootQueueName),
+                          serializationQueue: DispatchQueue(label: serializationQueueName,
+                                                            attributes: .concurrent))
+        responseQueue = DispatchQueue(label: responseQueueName,
+                                      attributes: .concurrent)
+    }
+
     /// Base URL of the API
-    public static var baseURL: URL!
+    public var baseURL: URL?
 
     /// Alamofire Setup
-    public static var session = Session(rootQueue: DispatchQueue(label: "com.iqapiclient.rootQueue"),
-                                        serializationQueue: DispatchQueue(label: "com.iqapiclient.serializationQueue",
-                                                                          attributes: .concurrent))
-    private static let responseQueue: DispatchQueue = DispatchQueue(label: "com.iqapiclient.responseQueue",
-                                                                    attributes: .concurrent)
+    public var session: Session
+    internal let responseQueue: DispatchQueue
 
     /// Some customzed error messages on errors
-    public static var malformedResponseErrorMessage = "Looks like we received malformed response from our server."
-    public static var unintentedResponseErrorMessage = "Looks like we received unexpected response from our server."
-    public static var decodeErrorMessage = "Unable to decode server response."
+    public var malformedResponseErrorMessage = "Looks like we received malformed response from our server."
+    public var unintentedResponseErrorMessage = "Looks like we received unexpected response from our server."
+    public var decodeErrorMessage = "Unable to decode server response."
 
     /// A error handler block for all errors (It save a lot of code we write at every place to show error),
     /// now implement it and show error message from here, no need to write error alert code everywhere
-    public static var commonErrorHandlerBlock: ((URLRequest, Parameters?, Data?, Error) -> Void)?
+    public var commonErrorHandlerBlock: ((URLRequest, Parameters?, Data?, Error) -> Void)?
 
 /// --------------------------
 ///     responseModifierBlock is used to modify the response before any processing.
@@ -95,15 +119,15 @@ final public class IQAPIClient {
 //                      userInfo: [NSLocalizedDescriptionKey:response["message"] as! String])
 //     completionHandler(.failure(error))
 
-    public static var responseModifierBlock: ((AFDataResponse<Data>, Any)->IQAPIClient.Result<Any, Any>)?
+    public var responseModifierBlock: ((AFDataResponse<Data>, Any)->IQAPIClient.Result<Any, Any>)?
 
-    public static var debuggingEnabled = false
+    public var debuggingEnabled = false
 
-    public static var httpHeaders = HTTPHeaders()
+    public var httpHeaders = HTTPHeaders()
 
     internal static let haptic = UINotificationFeedbackGenerator()
 
-    public static let jsonDecoder: JSONDecoder = {
+    public var jsonDecoder: JSONDecoder = {
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .secondsSince1970
         decoder.dataDecodingStrategy = .deferredToData
@@ -113,7 +137,7 @@ final public class IQAPIClient {
         return decoder
     }()
 
-    public static let jsonEncoder: JSONEncoder = {
+    public var jsonEncoder: JSONEncoder = {
         let decoder = JSONEncoder()
         decoder.dateEncodingStrategy = .secondsSince1970
         decoder.dataEncodingStrategy = .deferredToData
@@ -122,327 +146,4 @@ final public class IQAPIClient {
                                                                       nan: "NaN")
         return decoder
     }()
-
-    // swiftlint:disable line_length
-    /// `Success, Failure` either be a `valid JSON type` or must conform to `Decodable` protocol
-    @discardableResult public static func sendRequest<Success, Failure>(path: String,
-                                                                        method: HTTPMethod = .get,
-                                                                        parameters: Parameters? = nil,
-                                                                        encoding: ParameterEncoding? = nil,
-                                                                        headers: HTTPHeaders? = nil,
-                                                                        successSound: Bool = false,
-                                                                        failedSound: Bool = false,
-                                                                        executeErrorHandlerOnError: Bool = true,
-                                                                        forceMultipart: Bool = false,
-                                                                        completionHandler: @escaping (_ result: IQAPIClient.Result<Success, Failure>) -> Void) -> DataRequest {
-
-        assert(baseURL != nil, "basseURL is not specified.")
-
-        return sendRequest(url: baseURL.appendingPathComponent(path),
-                           method: method,
-                           parameters: parameters,
-                           encoding: encoding,
-                           headers: headers,
-                           successSound: successSound,
-                           failedSound: failedSound,
-                           executeErrorHandlerOnError: executeErrorHandlerOnError,
-                           forceMultipart: forceMultipart, completionHandler: completionHandler)
-    }
-
-    /// `Success, Failure` either be a `valid JSON type` or must conform to `Decodable` protocol
-    @discardableResult public static func sendRequest<Success>(path: String,
-                                                               method: HTTPMethod = .get,
-                                                               parameters: Parameters? = nil,
-                                                               encoding: ParameterEncoding? = nil,
-                                                               headers: HTTPHeaders? = nil,
-                                                               successSound: Bool = false,
-                                                               failedSound: Bool = false,
-                                                               executeErrorHandlerOnError: Bool = true,
-                                                               forceMultipart: Bool = false,
-                                                               completionHandler: @escaping (_ result: Swift.Result<Success, Error>) -> Void) -> DataRequest {
-
-        assert(baseURL != nil, "basseURL is not specified.")
-
-        return sendRequest(url: baseURL.appendingPathComponent(path),
-                           method: method,
-                           parameters: parameters,
-                           encoding: encoding,
-                           headers: headers,
-                           successSound: successSound,
-                           failedSound: failedSound,
-                           executeErrorHandlerOnError: executeErrorHandlerOnError,
-                           forceMultipart: forceMultipart, completionHandler: { (result: IQAPIClient.Result<Success, Error>) in
-            switch result {
-            case .success(let response):
-                completionHandler(.success(response))
-            case .failure(let response):
-                completionHandler(.failure(response))
-            case .error(let error):
-                completionHandler(.failure(error))
-            }
-        })
-    }
-
-    // swiftlint:disable line_length
-    /// `Success, Failure` either be a `valid JSON type` or must conform to `Decodable` protocol
-    @discardableResult public static func sendRequest<Success, Failure>(url: URLConvertible,
-                                                                        method: HTTPMethod = .get,
-                                                                        parameters: Parameters? = nil,
-                                                                        encoding: ParameterEncoding? = nil,
-                                                                        headers: HTTPHeaders? = nil,
-                                                                        successSound: Bool = false,
-                                                                        failedSound: Bool = false,
-                                                                        executeErrorHandlerOnError: Bool = true,
-                                                                        forceMultipart: Bool = false,
-                                                                        completionHandler: @escaping (_ result: IQAPIClient.Result<Success, Failure>) -> Void) -> DataRequest {
-
-        assert(baseURL != nil, "basseURL is not specified.")
-
-        return _sendRequest(url: url,
-                            method: method,
-                            parameters: parameters,
-                            encoding: encoding,
-                            headers: headers,
-                            forceMultipart: forceMultipart,
-                            completionHandler: { (originalResponse: AFDataResponse, result: IQAPIClient.Result<Success, Failure>) in
-            switch result {
-            case .success(let response):
-                if successSound {
-                    haptic.prepare()
-                    haptic.notificationOccurred(.success)
-                }
-                OperationQueue.main.addOperation {
-                    completionHandler(.success(response))
-                }
-            case .failure(let response):
-                if failedSound {
-                    haptic.prepare()
-                    haptic.notificationOccurred(.success)
-                }
-                OperationQueue.main.addOperation {
-                    completionHandler(.failure(response))
-
-                    if executeErrorHandlerOnError, let response = response as? Error {
-                        commonErrorHandlerBlock?(originalResponse.request!, parameters, originalResponse.data, response)
-                    }
-                }
-            case .error(let error):
-                if failedSound {
-                    haptic.prepare()
-                    haptic.notificationOccurred(.error)
-                }
-                OperationQueue.main.addOperation {
-                    completionHandler(.error(error))
-                    if executeErrorHandlerOnError {
-                        commonErrorHandlerBlock?(originalResponse.request!, parameters, originalResponse.data, error)
-                    }
-                }
-            }
-        })
-    }
-}
-
-/// internal
-internal extension IQAPIClient {
-
-    private struct RequestCounter {
-        static var counter: Int = 0
-    }
-
-    // swiftlint:disable line_length
-    @discardableResult private static func _sendRequest<Success, Failure>(url: URLConvertible,
-                                                                          method: HTTPMethod = .get,
-                                                                          parameters: Parameters? = nil,
-                                                                          encoding: ParameterEncoding? = nil,
-                                                                          headers: HTTPHeaders? = nil,
-                                                                          forceMultipart: Bool = false,
-                                                                          completionHandler: @escaping (_ originalResponse: AFDataResponse<Data>, _ result: IQAPIClient.Result<Success, Failure>) -> Void) -> DataRequest {
-
-        guard Success.Type.self != Failure.Type.self else {
-            fatalError("Success \(Success.self) and Failure \(Failure.self) must not be of same type")
-        }
-
-        RequestCounter.counter += 1
-
-        var httpHeaders: HTTPHeaders = self.httpHeaders
-
-        if let headers = headers {
-            for header in headers {
-                httpHeaders.add(header)
-            }
-        }
-
-        let requestNumber = RequestCounter.counter
-        printRequestURL(url: url, method: method, headers: httpHeaders,
-                        parameters: parameters, requestNumber: requestNumber)
-
-        let isMultipart = containsAnyFile(parameters: parameters)
-
-        let request: DataRequest
-
-        if isMultipart || forceMultipart {
-            request = session.upload(multipartFormData: { (multipartFormData) in
-                if let parameters = parameters {
-                    addToMultipartFormData(multipartFormData, fromKey: "", parameters: parameters)
-                }
-            }, to: url, method: method, headers: httpHeaders)
-        } else {
-
-            let finalEncoding: ParameterEncoding
-            if let encoding = encoding {
-                finalEncoding = encoding
-            } else {
-                finalEncoding = (method == .get ? URLEncoding.default : JSONEncoding.default)
-            }
-
-            request = session.request(url, method: method, parameters: parameters,
-                                      encoding: finalEncoding, headers: httpHeaders)
-        }
-        request.responseData(queue: responseQueue, completionHandler: { (response) in
-            handleResponse(response: response, requestNumber: requestNumber, completionHandler: completionHandler)
-        })
-        return request
-    }
-
-    // swiftlint:disable line_length
-    @discardableResult private static func _sendRequest<Success, Failure, Parameters: Encodable>(url: URLConvertible,
-                                                                                                 method: HTTPMethod = .get,
-                                                                                                 parameters: Parameters? = nil,
-                                                                                                 encoder: ParameterEncoder = URLEncodedFormParameterEncoder.default,
-                                                                                                 headers: HTTPHeaders? = nil,
-                                                                                                 forceMultipart: Bool = false,
-                                                                                                 completionHandler: @escaping (_ originalResponse: AFDataResponse<Data>, _ result: IQAPIClient.Result<Success, Failure>) -> Void) -> DataRequest {
-
-        guard Success.Type.self != Failure.Type.self else {
-            fatalError("Success \(Success.self) and Failure \(Failure.self) must not be of same type")
-        }
-
-        RequestCounter.counter += 1
-
-        var httpHeaders: HTTPHeaders = self.httpHeaders
-
-        if let headers = headers {
-            for header in headers {
-                httpHeaders.add(header)
-            }
-        }
-
-        let requestNumber = RequestCounter.counter
-        printRequestURL(url: url, method: method, headers: httpHeaders,
-                        parameters: parameters, requestNumber: requestNumber)
-
-        let isMultipart = containsAnyFile(parameters: parameters)
-
-        let request: DataRequest
-
-        if isMultipart || forceMultipart {
-            request = session.upload(multipartFormData: { (multipartFormData) in
-                if let parameters = parameters {
-                    addToMultipartFormData(multipartFormData, fromKey: "", parameters: parameters)
-                }
-            }, to: url, method: method, headers: httpHeaders)
-        } else {
-
-            request = session.request(url, method: method, parameters: parameters, encoder: encoder, headers: httpHeaders)
-        }
-        request.responseData(queue: responseQueue, completionHandler: { (response) in
-            handleResponse(response: response, requestNumber: requestNumber, completionHandler: completionHandler)
-        })
-
-        return request
-    }
-
-    private static func handleResponse<Success, Failure>(response: AFDataResponse<Data>,
-                                                         requestNumber: Int,
-                                                         completionHandler: @escaping (_ originalResponse: AFDataResponse<Data>, _ result: IQAPIClient.Result<Success, Failure>) -> Void) {
-        printResponse(response: response, requestNumber: requestNumber)
-
-        switch response.result {
-        case .success(let data):    /// Successfully got data response from server
-            let result: IQAPIClient.Result<Success, Failure> = intercept(response: response, data: data)
-            completionHandler(response, result)
-        case .failure(let error):   /// Error from the Alamofire
-            completionHandler(response, .error(error))
-        }
-    }
-
-    private static func containsAnyFile(parameters: Any?) -> Bool {
-
-        switch parameters {
-        case let array as [Any]:
-
-            for object in array {
-                if self.containsAnyFile(parameters: object) {
-                    return true
-                }
-            }
-
-            return false
-
-        case let dictionary as [String: Any]:
-
-            for object in dictionary.values {
-                if self.containsAnyFile(parameters: object) {
-                    return true
-                }
-            }
-
-            return false
-        case _ as File:
-            return true
-        default:
-            return false
-        }
-    }
-
-//    open func request<Parameters: Encodable>(_ convertible: URLConvertible,
-//                                             method: HTTPMethod = .get,
-//                                             parameters: Parameters? = nil,
-//                                             encoder: ParameterEncoder = URLEncodedFormParameterEncoder.default,
-//                                             headers: HTTPHeaders? = nil,
-//                                             interceptor: RequestInterceptor? = nil,
-//                                             requestModifier: RequestModifier? = nil) -> DataRequest {
-
-    // swiftlint:disable cyclomatic_complexity
-    private static func addToMultipartFormData(_ multipartFormData: MultipartFormData, fromKey key: String, parameters: Any) {
-
-        switch parameters {
-        case let array as [Any]:
-
-            for (index, object) in array.enumerated() {
-                if key.isEmpty {
-                    addToMultipartFormData(multipartFormData, fromKey: "[\(index)]", parameters: object)
-                } else {
-                    addToMultipartFormData(multipartFormData, fromKey: "\(key)[\(index)]", parameters: object)
-                }
-            }
-
-        case let dictionary as [String: Any]:
-
-            for object in dictionary {
-                if key.isEmpty {
-                    addToMultipartFormData(multipartFormData, fromKey: object.key, parameters: object.value)
-                } else {
-                    addToMultipartFormData(multipartFormData, fromKey: "\(key)[\(object.key)]", parameters: object.value)
-                }
-            }
-
-        case let file as File:
-
-            if let url = file.fileURL {
-                multipartFormData.append(url, withName: key, fileName: file.fileName, mimeType: file.mimeType)
-            } else if let data = file.data {
-                multipartFormData.append(data, withName: key, fileName: file.fileName, mimeType: file.mimeType)
-            }
-        case let data as Data:
-            multipartFormData.append(data,
-                                     withName: key)
-        default:
-            if let data = "\(parameters)".data(using: String.Encoding.utf8) {
-                multipartFormData.append(data, withName: key)
-            } else {
-                print("Failed to encode \(key) = \(parameters)")
-            }
-        }
-    }
 }

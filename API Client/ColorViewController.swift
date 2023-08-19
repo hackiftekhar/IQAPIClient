@@ -42,7 +42,7 @@ class ColorViewController: UITableViewController {
 
         activityIndicator.startAnimating()
 
-        IQAPIClient.color(id: color.id) { [weak self] (result) in
+        IQAPIClient.default.color(id: color.id) { [weak self] (result) in
 
             self?.activityIndicator.stopAnimating()
 

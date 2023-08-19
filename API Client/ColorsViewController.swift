@@ -40,7 +40,7 @@ class ColorsViewController: UITableViewController {
         activityIndicator.startAnimating()
         refreshButton.isEnabled = false
 
-        IQAPIClient.colors { [weak self] result in
+        IQAPIClient.default.colors { [weak self] result in
             self?.activityIndicator.stopAnimating()
             self?.refreshButton.isEnabled = true
 

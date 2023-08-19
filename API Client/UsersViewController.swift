@@ -14,13 +14,13 @@ import AlamofireImage
 
 class UsersViewController: UITableViewController {
 
-    #if compiler(>=5.6.0) && canImport(_Concurrency)
+#if compiler(>=5.6.0) && canImport(_Concurrency)
     @IBOutlet var activityIndicator: UIActivityIndicatorView!
     @IBOutlet var refreshButton: UIBarButtonItem!
-    #else
+#else
     @IBOutlet var activityIndicator: UIActivityIndicatorView!
     @IBOutlet var refreshButton: UIBarButtonItem!
-    #endif
+#endif
 
     var users = [User]()
 
@@ -48,7 +48,7 @@ class UsersViewController: UITableViewController {
         if #available(iOS 13.0, *) {
             Task {
                 do {
-                    let users = try await IQAPIClient.asyncAwaitUsers()
+                    let users = try await IQAPIClient.default.asyncAwaitUsers()
                     self.users = users
                     self.refreshUI()
                     self.activityIndicator.stopAnimating()
@@ -61,7 +61,7 @@ class UsersViewController: UITableViewController {
             }
         }
 #else
-        IQAPIClient.users { result in
+        IQAPIClient.default.users { result in
             
             self.activityIndicator.stopAnimating()
             self.refreshButton.isEnabled = true

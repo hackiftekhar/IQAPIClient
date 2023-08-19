@@ -29,7 +29,7 @@ internal extension IQAPIClient {
     // swiftlint:disable cyclomatic_complexity
     // swiftlint:disable line_length
     // swiftlint:disable function_body_length
-    static func intercept<Success, Failure>(response: AFDataResponse<Data>, data: Data) -> IQAPIClient.Result<Success, Failure> {
+    func intercept<Success, Failure>(response: AFDataResponse<Data>, data: Data) -> IQAPIClient.Result<Success, Failure> {
 
         let modifiedObject: Any?
         let modifiedError: Error?
