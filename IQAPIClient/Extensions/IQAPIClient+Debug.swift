@@ -34,7 +34,7 @@ internal extension IQAPIClient {
         if debuggingEnabled {
             Self.logQueue.async {
                 print("\n(\(requestNumber)). Request Start \(method.rawValue): \(url) --------")
-                
+
                 if let headers = headers {
                     print("(\(requestNumber)). Headers:\(headers)")
                 }

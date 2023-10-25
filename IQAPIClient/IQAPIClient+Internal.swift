@@ -37,7 +37,7 @@ internal extension IQAPIClient {
                                                            encoding: ParameterEncoding? = nil,
                                                            headers: HTTPHeaders? = nil,
                                                            forceMultipart: Bool = false,
-                                                           completionHandler: @escaping (_ originalResponse: AFDataResponse<Data>, _ result: IQAPIClient.Result<Success, Failure>) -> Void) -> DataRequest {
+                                                           completionHandler: @Sendable @escaping (_ originalResponse: AFDataResponse<Data>, _ result: IQAPIClient.Result<Success, Failure>) -> Void) -> DataRequest {
 
         guard Success.Type.self != Failure.Type.self else {
             fatalError("Success \(Success.self) and Failure \(Failure.self) must not be of same type")
@@ -91,7 +91,7 @@ internal extension IQAPIClient {
                                                                                   encoder: ParameterEncoder = URLEncodedFormParameterEncoder.default,
                                                                                   headers: HTTPHeaders? = nil,
                                                                                   forceMultipart: Bool = false,
-                                                                                  completionHandler: @escaping (_ originalResponse: AFDataResponse<Data>, _ result: IQAPIClient.Result<Success, Failure>) -> Void) -> DataRequest {
+                                                                                  completionHandler: @Sendable @escaping (_ originalResponse: AFDataResponse<Data>, _ result: IQAPIClient.Result<Success, Failure>) -> Void) -> DataRequest {
 
         guard Success.Type.self != Failure.Type.self else {
             fatalError("Success \(Success.self) and Failure \(Failure.self) must not be of same type")
@@ -134,7 +134,7 @@ internal extension IQAPIClient {
 
     private func handleResponse<Success, Failure>(response: AFDataResponse<Data>,
                                                   requestNumber: Int,
-                                                  completionHandler: @escaping (_ originalResponse: AFDataResponse<Data>, _ result: IQAPIClient.Result<Success, Failure>) -> Void) {
+                                                  completionHandler: @Sendable @escaping (_ originalResponse: AFDataResponse<Data>, _ result: IQAPIClient.Result<Success, Failure>) -> Void) {
         printResponse(response: response, requestNumber: requestNumber)
 
         switch response.result {
@@ -151,20 +151,16 @@ internal extension IQAPIClient {
         switch parameters {
         case let array as [Any]:
 
-            for object in array {
-                if self.containsAnyFile(parameters: object) {
-                    return true
-                }
+            for object in array where self.containsAnyFile(parameters: object) {
+                return true
             }
 
             return false
 
         case let dictionary as [String: Any]:
 
-            for object in dictionary.values {
-                if self.containsAnyFile(parameters: object) {
-                    return true
-                }
+            for object in dictionary.values where self.containsAnyFile(parameters: object) {
+                return true
             }
 
             return false
@@ -217,4 +213,5 @@ internal extension IQAPIClient {
             }
         }
     }
+    // swiftlint:enable cyclomatic_complexity
 }

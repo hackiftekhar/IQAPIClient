@@ -134,7 +134,7 @@ internal extension IQAPIClient {
                     return .failure(failure)
                 } else {
 
-                    if debuggingEnabled, (successDecodeError != nil || failureDecodeError != nil) {
+                    if debuggingEnabled, successDecodeError != nil || failureDecodeError != nil {
 
                         var finalMessges = [String]()
 

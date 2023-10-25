@@ -20,11 +20,11 @@
 //  THE SOFTWARE.
 
 import Foundation
-import Alamofire
+@preconcurrency import Alamofire
 
 /*
  These 4 types of completion blocks supported
-
+ 
  1) result: Swift.Result<Success, Error>
  2) result: IQAPIClient.Result<Success, Failure>
  3) httpURLResponse: HTTPURLResponse?, _ result: Swift.Result<Success, Error>
@@ -35,16 +35,16 @@ import Alamofire
 extension IQAPIClient {
 
     /// `Success, Failure` either be a `valid JSON type` or must conform to `Decodable` protocol
-    @discardableResult public func sendRequest<Success>(path: String,
-                                                        method: HTTPMethod = .get,
-                                                        parameters: Parameters? = nil,
-                                                        encoding: ParameterEncoding? = nil,
-                                                        headers: HTTPHeaders? = nil,
-                                                        successSound: Bool = false,
-                                                        failedSound: Bool = false,
-                                                        executeErrorHandlerOnError: Bool = true,
-                                                        forceMultipart: Bool = false,
-                                                        completionHandler: @escaping (_ result: Swift.Result<Success, Error>) -> Void) -> DataRequest {
+    @discardableResult public func sendRequest<Success: Sendable>(path: String,
+                                                                  method: HTTPMethod = .get,
+                                                                  parameters: Parameters? = nil,
+                                                                  encoding: ParameterEncoding? = nil,
+                                                                  headers: HTTPHeaders? = nil,
+                                                                  successSound: Bool = false,
+                                                                  failedSound: Bool = false,
+                                                                  executeErrorHandlerOnError: Bool = true,
+                                                                  forceMultipart: Bool = false,
+                                                                  completionHandler: @Sendable @escaping (_ result: Swift.Result<Success, Error>) -> Void) -> DataRequest {
 
         return sendRequest(path: path,
                            method: method,
@@ -61,16 +61,16 @@ extension IQAPIClient {
     }
 
     /// `Success, Failure` either be a `valid JSON type` or must conform to `Decodable` protocol
-    @discardableResult public func sendRequest<Success>(path: String,
-                                                        method: HTTPMethod = .get,
-                                                        parameters: Parameters? = nil,
-                                                        encoding: ParameterEncoding? = nil,
-                                                        headers: HTTPHeaders? = nil,
-                                                        successSound: Bool = false,
-                                                        failedSound: Bool = false,
-                                                        executeErrorHandlerOnError: Bool = true,
-                                                        forceMultipart: Bool = false,
-                                                        completionHandler: @escaping (_ httpURLResponse: HTTPURLResponse?, _ result: Swift.Result<Success, Error>) -> Void) -> DataRequest {
+    @discardableResult public func sendRequest<Success: Sendable>(path: String,
+                                                                  method: HTTPMethod = .get,
+                                                                  parameters: Parameters? = nil,
+                                                                  encoding: ParameterEncoding? = nil,
+                                                                  headers: HTTPHeaders? = nil,
+                                                                  successSound: Bool = false,
+                                                                  failedSound: Bool = false,
+                                                                  executeErrorHandlerOnError: Bool = true,
+                                                                  forceMultipart: Bool = false,
+                                                                  completionHandler: @Sendable @escaping (_ httpURLResponse: HTTPURLResponse?, _ result: Swift.Result<Success, Error>) -> Void) -> DataRequest {
 
         guard let baseURL = baseURL else { fatalError("basseURL is not specified.") }
 
@@ -108,7 +108,7 @@ extension IQAPIClient {
                                                                  failedSound: Bool = false,
                                                                  executeErrorHandlerOnError: Bool = true,
                                                                  forceMultipart: Bool = false,
-                                                                 completionHandler: @escaping (_ result: IQAPIClient.Result<Success, Failure>) -> Void) -> DataRequest {
+                                                                 completionHandler: @Sendable @escaping (_ result: IQAPIClient.Result<Success, Failure>) -> Void) -> DataRequest {
         return sendRequest(path: path,
                            method: method,
                            parameters: parameters,
@@ -133,7 +133,7 @@ extension IQAPIClient {
                                                                  failedSound: Bool = false,
                                                                  executeErrorHandlerOnError: Bool = true,
                                                                  forceMultipart: Bool = false,
-                                                                 completionHandler: @escaping (_ httpURLResponse: HTTPURLResponse?, _ result: IQAPIClient.Result<Success, Failure>) -> Void) -> DataRequest {
+                                                                 completionHandler: @Sendable @escaping (_ httpURLResponse: HTTPURLResponse?, _ result: IQAPIClient.Result<Success, Failure>) -> Void) -> DataRequest {
         guard let baseURL = baseURL else { fatalError("basseURL is not specified.") }
 
         return sendRequest(url: baseURL.appendingPathComponent(path),
@@ -151,16 +151,16 @@ extension IQAPIClient {
 extension IQAPIClient {
 
     /// `Success, Failure` either be a `valid JSON type` or must conform to `Decodable` protocol
-    @discardableResult public func sendRequest<Success>(url: URLConvertible,
-                                                        method: HTTPMethod = .get,
-                                                        parameters: Parameters? = nil,
-                                                        encoding: ParameterEncoding? = nil,
-                                                        headers: HTTPHeaders? = nil,
-                                                        successSound: Bool = false,
-                                                        failedSound: Bool = false,
-                                                        executeErrorHandlerOnError: Bool = true,
-                                                        forceMultipart: Bool = false,
-                                                        completionHandler: @escaping (_ result: Swift.Result<Success, Error>) -> Void) -> DataRequest {
+    @discardableResult public func sendRequest<Success: Sendable>(url: URLConvertible,
+                                                                  method: HTTPMethod = .get,
+                                                                  parameters: Parameters? = nil,
+                                                                  encoding: ParameterEncoding? = nil,
+                                                                  headers: HTTPHeaders? = nil,
+                                                                  successSound: Bool = false,
+                                                                  failedSound: Bool = false,
+                                                                  executeErrorHandlerOnError: Bool = true,
+                                                                  forceMultipart: Bool = false,
+                                                                  completionHandler: @Sendable @escaping (_ result: Swift.Result<Success, Error>) -> Void) -> DataRequest {
         return sendRequest(url: url,
                            method: method,
                            parameters: parameters,
@@ -176,16 +176,16 @@ extension IQAPIClient {
     }
 
     /// `Success, Failure` either be a `valid JSON type` or must conform to `Decodable` protocol
-    @discardableResult public func sendRequest<Success>(url: URLConvertible,
-                                                        method: HTTPMethod = .get,
-                                                        parameters: Parameters? = nil,
-                                                        encoding: ParameterEncoding? = nil,
-                                                        headers: HTTPHeaders? = nil,
-                                                        successSound: Bool = false,
-                                                        failedSound: Bool = false,
-                                                        executeErrorHandlerOnError: Bool = true,
-                                                        forceMultipart: Bool = false,
-                                                        completionHandler: @escaping (_ httpURLResponse: HTTPURLResponse?, _ result: Swift.Result<Success, Error>) -> Void) -> DataRequest {
+    @discardableResult public func sendRequest<Success: Sendable>(url: URLConvertible,
+                                                                  method: HTTPMethod = .get,
+                                                                  parameters: Parameters? = nil,
+                                                                  encoding: ParameterEncoding? = nil,
+                                                                  headers: HTTPHeaders? = nil,
+                                                                  successSound: Bool = false,
+                                                                  failedSound: Bool = false,
+                                                                  executeErrorHandlerOnError: Bool = true,
+                                                                  forceMultipart: Bool = false,
+                                                                  completionHandler: @Sendable @escaping (_ httpURLResponse: HTTPURLResponse?, _ result: Swift.Result<Success, Error>) -> Void) -> DataRequest {
         return sendRequest(url: url,
                            method: method,
                            parameters: parameters,
@@ -212,16 +212,16 @@ extension IQAPIClient {
 extension IQAPIClient {
 
     /// `Success, Failure` either be a `valid JSON type` or must conform to `Decodable` protocol
-    @discardableResult public func sendRequest<Success, Failure>(url: URLConvertible,
-                                                                 method: HTTPMethod = .get,
-                                                                 parameters: Parameters? = nil,
-                                                                 encoding: ParameterEncoding? = nil,
-                                                                 headers: HTTPHeaders? = nil,
-                                                                 successSound: Bool = false,
-                                                                 failedSound: Bool = false,
-                                                                 executeErrorHandlerOnError: Bool = true,
-                                                                 forceMultipart: Bool = false,
-                                                                 completionHandler: @escaping (_ result: IQAPIClient.Result<Success, Failure>) -> Void) -> DataRequest {
+    @discardableResult public func sendRequest<Success: Sendable, Failure: Sendable>(url: URLConvertible,
+                                                                                     method: HTTPMethod = .get,
+                                                                                     parameters: Parameters? = nil,
+                                                                                     encoding: ParameterEncoding? = nil,
+                                                                                     headers: HTTPHeaders? = nil,
+                                                                                     successSound: Bool = false,
+                                                                                     failedSound: Bool = false,
+                                                                                     executeErrorHandlerOnError: Bool = true,
+                                                                                     forceMultipart: Bool = false,
+                                                                                     completionHandler: @Sendable @escaping (_ result: IQAPIClient.Result<Success, Failure>) -> Void) -> DataRequest {
         return sendRequest(url: url,
                            method: method,
                            parameters: parameters,
@@ -237,16 +237,16 @@ extension IQAPIClient {
     }
 
     /// `Success, Failure` either be a `valid JSON type` or must conform to `Decodable` protocol
-    @discardableResult public func sendRequest<Success, Failure>(url: URLConvertible,
-                                                                 method: HTTPMethod = .get,
-                                                                 parameters: Parameters? = nil,
-                                                                 encoding: ParameterEncoding? = nil,
-                                                                 headers: HTTPHeaders? = nil,
-                                                                 successSound: Bool = false,
-                                                                 failedSound: Bool = false,
-                                                                 executeErrorHandlerOnError: Bool = true,
-                                                                 forceMultipart: Bool = false,
-                                                                 completionHandler: @escaping (_ httpURLResponse: HTTPURLResponse?, _ result: IQAPIClient.Result<Success, Failure>) -> Void) -> DataRequest {
+    @discardableResult public func sendRequest<Success: Sendable, Failure: Sendable>(url: URLConvertible,
+                                                                                     method: HTTPMethod = .get,
+                                                                                     parameters: Parameters? = nil,
+                                                                                     encoding: ParameterEncoding? = nil,
+                                                                                     headers: HTTPHeaders? = nil,
+                                                                                     successSound: Bool = false,
+                                                                                     failedSound: Bool = false,
+                                                                                     executeErrorHandlerOnError: Bool = true,
+                                                                                     forceMultipart: Bool = false,
+                                                                                     completionHandler: @Sendable @escaping (_ httpURLResponse: HTTPURLResponse?, _ result: IQAPIClient.Result<Success, Failure>) -> Void) -> DataRequest {
         return _sendRequest(url: url,
                             method: method,
                             parameters: parameters,
@@ -255,33 +255,29 @@ extension IQAPIClient {
                             forceMultipart: forceMultipart,
                             completionHandler: { (originalResponse: AFDataResponse, result: IQAPIClient.Result<Success, Failure>) in
 
-            OperationQueue.main.addOperation {
+            DispatchQueue.main.async { [self, completionHandler, originalResponse, result, parameters] in
                 completionHandler(originalResponse.response, result)
-            }
 
-            switch result {
-            case .success:
-                if successSound {
-                    Self.haptic.prepare()
-                    Self.haptic.notificationOccurred(.success)
-                }
-            case .failure(let response):
-                if failedSound {
-                    Self.haptic.prepare()
-                    Self.haptic.notificationOccurred(.success)
-                }
-                if executeErrorHandlerOnError, let response = response as? Error {
-                    OperationQueue.main.addOperation {
+                switch result {
+                case .success:
+                    if successSound {
+                        Self.haptic.prepare()
+                        Self.haptic.notificationOccurred(.success)
+                    }
+                case .failure(let response):
+                    if failedSound {
+                        Self.haptic.prepare()
+                        Self.haptic.notificationOccurred(.success)
+                    }
+                    if executeErrorHandlerOnError, let response = response as? Error {
                         self.commonErrorHandlerBlock?(originalResponse.request!, parameters, originalResponse.data, response)
                     }
-                }
-            case .error(let error):
-                if failedSound {
-                    Self.haptic.prepare()
-                    Self.haptic.notificationOccurred(.error)
-                }
-                if executeErrorHandlerOnError {
-                    OperationQueue.main.addOperation {
+                case .error(let error):
+                    if failedSound {
+                        Self.haptic.prepare()
+                        Self.haptic.notificationOccurred(.error)
+                    }
+                    if executeErrorHandlerOnError {
                         self.commonErrorHandlerBlock?(originalResponse.request!, parameters, originalResponse.data, error)
                     }
                 }
@@ -289,3 +285,4 @@ extension IQAPIClient {
         })
     }
 }
+// swiftlint:enable line_length

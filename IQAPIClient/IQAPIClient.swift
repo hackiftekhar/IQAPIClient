@@ -31,9 +31,9 @@ import Alamofire
 // https://json2kt.com/             It change the snake_case to camelCase but format the code  beautifully
 // https://github.com/insanoid/SwiftyJSONAccelerator    This is an app which can be installed on your mac
 
-final public class IQAPIClient {
+final public class IQAPIClient: Sendable {
 
-    @frozen public enum Result<Success, Failure> {
+    @frozen public enum Result<Success: Sendable, Failure: Sendable>: Sendable {
 
         /// A success, storing a `Success` value.
         case success(Success)
@@ -48,7 +48,7 @@ final public class IQAPIClient {
 
     public static let `default` = IQAPIClient()
 
-    init(baseURL: URL? = nil, identifier: String? = nil) {
+    public init(baseURL: URL? = nil, identifier: String? = nil) {
         self.baseURL = baseURL
 
         var rootQueueName: String = "com.iqapiclient.rootQueue"
@@ -118,12 +118,13 @@ final public class IQAPIClient {
 //                      userInfo: [NSLocalizedDescriptionKey:response["message"] as! String])
 //     completionHandler(.failure(error))
 
-    public var responseModifierBlock: ((AFDataResponse<Data>, Any)->IQAPIClient.Result<Any, Any>)?
+    public var responseModifierBlock: ((AFDataResponse<Data>, Any) -> IQAPIClient.Result<Any, Any>)?
 
     public var debuggingEnabled = false
 
     public var httpHeaders = HTTPHeaders()
 
+    @MainActor
     internal static let haptic = UINotificationFeedbackGenerator()
 
     public var jsonDecoder: JSONDecoder = {

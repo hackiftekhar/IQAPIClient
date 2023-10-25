@@ -41,11 +41,11 @@ SPEC CHECKSUMS:
   AlamofireImage: 843953fa97bee5f561cf05d83abd759e590b068d
   DiffableDataSources: 80396cec405c9b29e1e07b55c9be7d11b46c8741
   DifferenceKit: ab185c4d7f9cef8af3fcf593e5b387fb81e999ca
-  IQAPIClient: 99870c81101a8776fee0ed49d6bcf1109b5f4d87
+  IQAPIClient: b5dfece8a7adb2efaa1f996f09a2b9c93abf6bb9
   IQListKit: 91f14441e5cd7e74fefbedf6c62ff668e65a44da
   SwiftLint: 1cc5cd61ba9bacb2194e340aeb47a2a37fda00b3
   SwiftTryCatch: fb6d2b34abe48efd69578dac919293a44f95b481
 
 PODFILE CHECKSUM: 976b7454af29b2acd5c0c49f98abb982e51fcdb9
 
-COCOAPODS: 1.12.1
+COCOAPODS: 1.13.0

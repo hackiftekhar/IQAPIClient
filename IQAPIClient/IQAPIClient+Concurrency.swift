@@ -30,15 +30,15 @@ extension IQAPIClient {
 
     // swiftlint:disable line_length
     /// `Success, Failure` either be a `valid JSON type` or must conform to `Decodable` protocol
-    @discardableResult public func sendRequest<Success>(path: String,
-                                                        method: HTTPMethod = .get,
-                                                        parameters: Parameters? = nil,
-                                                        encoding: ParameterEncoding? = nil,
-                                                        headers: HTTPHeaders? = nil,
-                                                        successSound: Bool = false,
-                                                        failedSound: Bool = false,
-                                                        forceMultipart: Bool = false,
-                                                        executeErrorHandlerOnError: Bool = true) async throws -> Success {
+    @discardableResult public func sendRequest<Success: Sendable>(path: String,
+                                                                  method: HTTPMethod = .get,
+                                                                  parameters: Parameters? = nil,
+                                                                  encoding: ParameterEncoding? = nil,
+                                                                  headers: HTTPHeaders? = nil,
+                                                                  successSound: Bool = false,
+                                                                  failedSound: Bool = false,
+                                                                  forceMultipart: Bool = false,
+                                                                  executeErrorHandlerOnError: Bool = true) async throws -> Success {
 
         guard let baseURL = baseURL else { fatalError("basseURL is not specified.") }
 
@@ -87,12 +87,12 @@ internal extension IQAPIClient {
     }
 
     // swiftlint:disable cyclomatic_complexity
-    private func _sendRequest<Success, Failure>(url: URLConvertible,
-                                                method: HTTPMethod = .get,
-                                                parameters: Parameters? = nil,
-                                                encoding: ParameterEncoding? = nil,
-                                                forceMultipart: Bool = false,
-                                                headers: HTTPHeaders? = nil) async throws -> (request: DataRequest, result: IQAPIClient.Result<Success, Failure>) {
+    private func _sendRequest<Success: Sendable, Failure: Sendable>(url: URLConvertible,
+                                                                    method: HTTPMethod = .get,
+                                                                    parameters: Parameters? = nil,
+                                                                    encoding: ParameterEncoding? = nil,
+                                                                    forceMultipart: Bool = false,
+                                                                    headers: HTTPHeaders? = nil) async throws -> (request: DataRequest, result: IQAPIClient.Result<Success, Failure>) {
 
         guard Success.Type.self != Failure.Type.self else {
             fatalError("Success \(Success.self) and Failure \(Failure.self) must not be of same type")
@@ -162,20 +162,16 @@ internal extension IQAPIClient {
         switch parameters {
         case let array as [Any]:
 
-            for object in array {
-                if self.containsAnyFile(parameters: object) {
-                    return true
-                }
+            for object in array where self.containsAnyFile(parameters: object) {
+                return true
             }
 
             return false
 
         case let dictionary as [String: Any]:
 
-            for object in dictionary.values {
-                if self.containsAnyFile(parameters: object) {
-                    return true
-                }
+            for object in dictionary.values where self.containsAnyFile(parameters: object) {
+                return true
             }
 
             return false

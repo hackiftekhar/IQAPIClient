@@ -12,10 +12,6 @@ import IQListKit
 class UserCell: UITableViewCell, IQModelableCell {
     typealias Model = User
 
-    override func awakeFromNib() {
-        super.awakeFromNib()
-    }
-
     var model: Model? {
         didSet {
             guard let model = model else {
