@@ -72,7 +72,7 @@ extension IQAPIClient {
                                                                   forceMultipart: Bool = false,
                                                                   completionHandler: @Sendable @escaping (_ httpURLResponse: HTTPURLResponse?, _ result: Swift.Result<Success, Error>) -> Void) -> DataRequest {
 
-        guard let baseURL = baseURL else { fatalError("basseURL is not specified.") }
+        guard let baseURL = baseURL else { fatalError("baseURL is not specified.") }
 
         return sendRequest(url: baseURL.appendingPathComponent(path),
                            method: method,
@@ -134,7 +134,7 @@ extension IQAPIClient {
                                                                  executeErrorHandlerOnError: Bool = true,
                                                                  forceMultipart: Bool = false,
                                                                  completionHandler: @Sendable @escaping (_ httpURLResponse: HTTPURLResponse?, _ result: IQAPIClient.Result<Success, Failure>) -> Void) -> DataRequest {
-        guard let baseURL = baseURL else { fatalError("basseURL is not specified.") }
+        guard let baseURL = baseURL else { fatalError("baseURL is not specified.") }
 
         return sendRequest(url: baseURL.appendingPathComponent(path),
                            method: method,

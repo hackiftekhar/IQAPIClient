@@ -136,22 +136,22 @@ internal extension IQAPIClient {
 
                     if debuggingEnabled, successDecodeError != nil || failureDecodeError != nil {
 
-                        var finalMessges = [String]()
+                        var finalMessages = [String]()
 
-                        finalMessges.append("\nReceived \'\(type(of: modifiedObject.self))\' type response.")
+                        finalMessages.append("\nReceived \'\(type(of: modifiedObject.self))\' type response.")
 
                         if let successDecodeError = successDecodeError {
 
-                            finalMessges.append("Unable to decode server response to \'\(Success.self)\' type.")
+                            finalMessages.append("Unable to decode server response to \'\(Success.self)\' type.")
                             print("\n\(Success.self): \(successDecodeError)")
                         }
 
                         if let failureDecodeError = failureDecodeError {
-                            finalMessges.append("Unable to decode server response to \'\(Failure.self)\' type.")
+                            finalMessages.append("Unable to decode server response to \'\(Failure.self)\' type.")
                             print("\n\(Failure.self): \(failureDecodeError)")
                         }
 
-                        print(finalMessges.joined(separator: "\n\n"))
+                        print(finalMessages.joined(separator: "\n\n"))
                     }
 
                     let error = NSError(domain: NSStringFromClass(Self.self),

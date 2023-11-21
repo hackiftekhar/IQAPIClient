@@ -40,7 +40,7 @@ extension IQAPIClient {
                                                                   forceMultipart: Bool = false,
                                                                   executeErrorHandlerOnError: Bool = true) async throws -> Success {
 
-        guard let baseURL = baseURL else { fatalError("basseURL is not specified.") }
+        guard let baseURL = baseURL else { fatalError("baseURL is not specified.") }
 
         let result: (request: DataRequest, result: IQAPIClient.Result<Success, Error>)
         result = try await _sendRequest(url: baseURL.appendingPathComponent(path), method: method, parameters: parameters, encoding: encoding, forceMultipart: forceMultipart, headers: headers)

@@ -37,19 +37,19 @@ public struct File: Hashable, Codable {
         fileAttributes["url"] = fileURL?.absoluteString
         fileAttributes["size"] = data?.count
 
-        var fileDescrioptions: [String] = []
+        var fileDescriptions: [String] = []
 
         if let data = data {
-            fileDescrioptions.append("data: \(data.count) byte")
+            fileDescriptions.append("data: \(data.count) byte")
         }
 
-        fileDescrioptions.append("mimeType: \(mimeType)")
-        fileDescrioptions.append("fileName: \(fileName)")
+        fileDescriptions.append("mimeType: \(mimeType)")
+        fileDescriptions.append("fileName: \(fileName)")
 
         if let fileURL = fileURL {
-            fileDescrioptions.append("fileURL: \"\(fileURL)\"")
+            fileDescriptions.append("fileURL: \"\(fileURL)\"")
         }
 
-        return "File(\(fileDescrioptions.joined(separator: ", ")))"
+        return "File(\(fileDescriptions.joined(separator: ", ")))"
     }
 }

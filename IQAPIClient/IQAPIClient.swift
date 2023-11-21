@@ -74,9 +74,9 @@ final public class IQAPIClient: Sendable {
     public var session: Session
     internal let responseQueue: DispatchQueue
 
-    /// Some customzed error messages on errors
+    /// Some customized error messages on errors
     public var malformedResponseErrorMessage = "Looks like we received malformed response from our server."
-    public var unintentedResponseErrorMessage = "Looks like we received unexpected response from our server."
+    public var unexpectedResponseErrorMessage = "Looks like we received unexpected response from our server."
     public var decodeErrorMessage = "Unable to decode server response."
 
     /// A error handler block for all errors (It save a lot of code we write at every place to show error),

@@ -82,7 +82,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
             guard let response = response as? [String: Any] else {
                 let error = NSError(domain: "ServerError", code: NSURLErrorBadServerResponse,
-                                    userInfo: [NSLocalizedDescriptionKey: IQAPIClient.default.unintentedResponseErrorMessage])
+                                    userInfo: [NSLocalizedDescriptionKey: IQAPIClient.default.unexpectedResponseErrorMessage])
                return .error(error)
             }
 
@@ -98,7 +98,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 return .success(data)
             } else {
                 let error = NSError(domain: "ServerError", code: NSURLErrorBadServerResponse,
-                                    userInfo: [NSLocalizedDescriptionKey: IQAPIClient.default.unintentedResponseErrorMessage])
+                                    userInfo: [NSLocalizedDescriptionKey: IQAPIClient.default.unexpectedResponseErrorMessage])
                return .error(error)
             }
         }
