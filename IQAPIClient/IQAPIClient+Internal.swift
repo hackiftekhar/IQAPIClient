@@ -28,47 +28,160 @@ internal extension IQAPIClient {
     private struct RequestCounter {
         static var counter: Int = 0
     }
+}
 
-    // swiftlint:disable line_length
-    // swiftlint:disable identifier_name
+// swiftlint:disable line_length
+// swiftlint:disable identifier_name
+// swiftlint:disable function_parameter_count
+internal extension IQAPIClient {
     @discardableResult func _sendRequest<Success, Failure>(url: URLConvertible,
-                                                           method: HTTPMethod = .get,
-                                                           parameters: Parameters? = nil,
-                                                           encoding: ParameterEncoding? = nil,
-                                                           headers: HTTPHeaders? = nil,
-                                                           forceMultipart: Bool = false,
-                                                           completionHandler: @Sendable @escaping (_ originalResponse: AFDataResponse<Data>, _ result: IQAPIClient.Result<Success, Failure>) -> Void) -> DataRequest {
+                                                           method: HTTPMethod,
+                                                           parameters: Parameters?,
+                                                           encoding: ParameterEncoding?,
+                                                           headers: HTTPHeaders?,
+                                                           options: Options,
+                                                           completionHandler: @Sendable @escaping (_ originalResponse: AFDataResponse<Data>, _ result: IQAPIClient.Result<Success, Failure>) -> Void) -> DataRequest
+        where Success: Sendable, Failure: Sendable {
 
         guard Success.Type.self != Failure.Type.self else {
             fatalError("Success \(Success.self) and Failure \(Failure.self) must not be of same type")
         }
 
+        let (request, requestNumber) = newRequest(url: url, method: method, parameters: parameters, encoding: encoding, headers: headers, options: options)
+        Task.detached(priority: .utility) {
+            let response = await request.serializingData().response
+
+            let result: IQAPIClient.Result<Success, Failure> = self.handleResponse(response: response, requestNumber: requestNumber)
+            switch result {
+            case .success, .failure:
+                return (request, result)
+            case .error(let error):
+                throw error
+            }
+        }
+        return request
+    }
+
+    @discardableResult func _sendRequest<Success, Failure, Parameters>(url: URLConvertible,
+                                                                       method: HTTPMethod,
+                                                                       parameters: Parameters?,
+                                                                       encoder: ParameterEncoder?,
+                                                                       headers: HTTPHeaders?,
+                                                                       options: Options,
+                                                                       completionHandler: @Sendable @escaping (_ originalResponse: AFDataResponse<Data>, _ result: IQAPIClient.Result<Success, Failure>) -> Void) -> DataRequest
+        where Success: Sendable, Failure: Sendable, Parameters: Encodable {
+
+        guard Success.Type.self != Failure.Type.self else {
+            fatalError("Success \(Success.self) and Failure \(Failure.self) must not be of same type")
+        }
+
+        let (request, requestNumber) = newRequest(url: url, method: method, parameters: parameters, encoder: encoder, headers: headers, options: options)
+        Task.detached(priority: .utility) {
+            let response = await request.serializingData().response
+
+            let result: IQAPIClient.Result<Success, Failure> = self.handleResponse(response: response, requestNumber: requestNumber)
+            switch result {
+            case .success, .failure:
+                return (request, result)
+            case .error(let error):
+                throw error
+            }
+        }
+        return request
+    }
+}
+
+internal extension IQAPIClient {
+
+    func _sendRequest<Success, Failure>(url: URLConvertible,
+                                        method: HTTPMethod,
+                                        parameters: Parameters?,
+                                        encoding: ParameterEncoding?,
+                                        headers: HTTPHeaders?,
+                                        options: Options) async throws -> (response: DataResponse<Data, AFError>, result: IQAPIClient.Result<Success, Failure>)
+    where Success: Sendable, Failure: Sendable {
+
+        guard Success.Type.self != Failure.Type.self else {
+            fatalError("Success \(Success.self) and Failure \(Failure.self) must not be of same type")
+        }
+
+        let (request, requestNumber) = newRequest(url: url, method: method, parameters: parameters, encoding: encoding, headers: headers, options: options)
+        let response = await request.serializingData().response
+
+        let result: IQAPIClient.Result<Success, Failure> = handleResponse(response: response, requestNumber: requestNumber)
+        switch result {
+        case .success, .failure:
+            return (response, result)
+        case .error(let error):
+            throw error
+        }
+    }
+
+    func _sendRequest<Success, Failure, Parameters>(url: URLConvertible,
+                                                    method: HTTPMethod,
+                                                    parameters: Parameters?,
+                                                    encoder: ParameterEncoder?,
+                                                    headers: HTTPHeaders?,
+                                                    options: Options) async throws -> (request: DataRequest, result: IQAPIClient.Result<Success, Failure>)
+        where Success: Sendable, Failure: Sendable, Parameters: Encodable {
+
+        guard Success.Type.self != Failure.Type.self else {
+            fatalError("Success \(Success.self) and Failure \(Failure.self) must not be of same type")
+        }
+
+        let (request, requestNumber) = newRequest(url: url, method: method, parameters: parameters, encoder: encoder, headers: headers, options: options)
+        let response = await request.serializingData().response
+
+        let result: IQAPIClient.Result<Success, Failure> = handleResponse(response: response, requestNumber: requestNumber)
+        switch result {
+        case .success, .failure:
+            return (request, result)
+        case .error(let error):
+            throw error
+        }
+    }
+}
+
+private extension IQAPIClient {
+
+    func newRequest(url: URLConvertible,
+                    method: HTTPMethod,
+                    parameters: Parameters?,
+                    encoding: ParameterEncoding?,
+                    headers: HTTPHeaders?,
+                    options: Options) -> (request: DataRequest, number: Int) {
+
         RequestCounter.counter += 1
 
-        var httpHeaders: HTTPHeaders = self.httpHeaders
+        var httpHeaders: HTTPHeaders
 
         if let headers = headers {
-            for header in headers {
+            httpHeaders = headers
+
+            for header in self.httpHeaders {
                 httpHeaders.add(header)
             }
+        } else {
+            httpHeaders = self.httpHeaders
         }
 
         let requestNumber = RequestCounter.counter
-        printRequestURL(url: url, method: method, headers: httpHeaders,
-                        parameters: parameters, requestNumber: requestNumber)
+        Task.detached(priority: .utility) { [httpHeaders] in
+            await self.printRequestURL(url: url, method: method, headers: httpHeaders,
+                                  parameters: parameters, requestNumber: requestNumber)
+        }
 
         let isMultipart = Self.containsAnyFile(parameters: parameters)
 
         let request: DataRequest
 
-        if isMultipart || forceMultipart {
+        if isMultipart || options.contains(.forceMultipart) {
             request = session.upload(multipartFormData: { (multipartFormData) in
                 if let parameters = parameters {
                     Self.addToMultipartFormData(multipartFormData, fromKey: "", parameters: parameters)
                 }
             }, to: url, method: method, headers: httpHeaders)
         } else {
-
             let finalEncoding: ParameterEncoding
             if let encoding = encoding {
                 finalEncoding = encoding
@@ -76,46 +189,43 @@ internal extension IQAPIClient {
                 finalEncoding = (method == .get ? URLEncoding.default : JSONEncoding.default)
             }
 
-            request = session.request(url, method: method, parameters: parameters,
-                                      encoding: finalEncoding, headers: httpHeaders)
+            request = session.request(url, method: method, parameters: parameters, encoding: finalEncoding, headers: httpHeaders)
         }
-        request.responseData(queue: responseQueue, completionHandler: { (response) in
-            self.handleResponse(response: response, requestNumber: requestNumber, completionHandler: completionHandler)
-        })
-        return request
+        return (request, requestNumber)
     }
 
-    @discardableResult func _sendRequest<Success, Failure, Parameters: Encodable>(url: URLConvertible,
-                                                                                  method: HTTPMethod = .get,
-                                                                                  parameters: Parameters? = nil,
-                                                                                  encoder: ParameterEncoder = URLEncodedFormParameterEncoder.default,
-                                                                                  headers: HTTPHeaders? = nil,
-                                                                                  forceMultipart: Bool = false,
-                                                                                  completionHandler: @Sendable @escaping (_ originalResponse: AFDataResponse<Data>, _ result: IQAPIClient.Result<Success, Failure>) -> Void) -> DataRequest {
-
-        guard Success.Type.self != Failure.Type.self else {
-            fatalError("Success \(Success.self) and Failure \(Failure.self) must not be of same type")
-        }
+    func newRequest<Parameters: Encodable>(url: URLConvertible,
+                                           method: HTTPMethod,
+                                           parameters: Parameters?,
+                                           encoder: ParameterEncoder?,
+                                           headers: HTTPHeaders?,
+                                           options: Options) -> (request: DataRequest, number: Int) {
 
         RequestCounter.counter += 1
 
-        var httpHeaders: HTTPHeaders = self.httpHeaders
+        var httpHeaders: HTTPHeaders
 
         if let headers = headers {
-            for header in headers {
+            httpHeaders = headers
+
+            for header in self.httpHeaders {
                 httpHeaders.add(header)
             }
+        } else {
+            httpHeaders = self.httpHeaders
         }
 
         let requestNumber = RequestCounter.counter
-        printRequestURL(url: url, method: method, headers: httpHeaders,
-                        parameters: parameters, requestNumber: requestNumber)
+        Task.detached(priority: .utility) { [httpHeaders] in
+            await self.printRequestURL(url: url, method: method, headers: httpHeaders,
+                                  parameters: parameters, requestNumber: requestNumber)
+        }
 
         let isMultipart = Self.containsAnyFile(parameters: parameters)
 
         let request: DataRequest
 
-        if isMultipart || forceMultipart {
+        if isMultipart || options.contains(.forceMultipart) {
             request = session.upload(multipartFormData: { (multipartFormData) in
                 if let parameters = parameters {
                     Self.addToMultipartFormData(multipartFormData, fromKey: "", parameters: parameters)
@@ -123,30 +233,34 @@ internal extension IQAPIClient {
             }, to: url, method: method, headers: httpHeaders)
         } else {
 
-            request = session.request(url, method: method, parameters: parameters, encoder: encoder, headers: httpHeaders)
-        }
-        request.responseData(queue: responseQueue, completionHandler: { (response) in
-            self.handleResponse(response: response, requestNumber: requestNumber, completionHandler: completionHandler)
-        })
+            let finalEncoder: ParameterEncoder
+            if let encoder = encoder {
+                finalEncoder = encoder
+            } else {
+                finalEncoder = (method == .get ? URLEncodedFormParameterEncoder.default : JSONParameterEncoder.default)
+            }
 
-        return request
+            request = session.request(url, method: method, parameters: parameters, encoder: finalEncoder, headers: httpHeaders)
+        }
+        return (request, requestNumber)
     }
 
-    private func handleResponse<Success, Failure>(response: AFDataResponse<Data>,
-                                                  requestNumber: Int,
-                                                  completionHandler: @Sendable @escaping (_ originalResponse: AFDataResponse<Data>, _ result: IQAPIClient.Result<Success, Failure>) -> Void) {
-        printResponse(response: response, requestNumber: requestNumber)
+    func handleResponse<Success, Failure>(response: AFDataResponse<Data>,
+                                          requestNumber: Int) -> IQAPIClient.Result<Success, Failure>
+    where Success: Sendable, Failure: Sendable {
+        Task.detached(priority: .utility) {
+            await self.printResponse(response: response, requestNumber: requestNumber)
+        }
 
         switch response.result {
         case .success(let data):    /// Successfully got data response from server
-            let result: IQAPIClient.Result<Success, Failure> = intercept(response: response, data: data)
-            completionHandler(response, result)
+            return intercept(response: response, data: data)
         case .failure(let error):   /// Error from the Alamofire
-            completionHandler(response, .error(error))
+            return .error(error)
         }
     }
 
-    private static func containsAnyFile(parameters: Any?) -> Bool {
+    static func containsAnyFile(parameters: Any?) -> Bool {
 
         switch parameters {
         case let array as [Any]:
@@ -172,7 +286,7 @@ internal extension IQAPIClient {
     }
 
     // swiftlint:disable cyclomatic_complexity
-    private static func addToMultipartFormData(_ multipartFormData: MultipartFormData, fromKey key: String, parameters: Any) {
+    static func addToMultipartFormData(_ multipartFormData: MultipartFormData, fromKey key: String, parameters: Any) {
 
         switch parameters {
         case let array as [Any]:
@@ -203,8 +317,7 @@ internal extension IQAPIClient {
                 multipartFormData.append(data, withName: key, fileName: file.fileName, mimeType: file.mimeType)
             }
         case let data as Data:
-            multipartFormData.append(data,
-                                     withName: key)
+            multipartFormData.append(data, withName: key)
         default:
             if let data = "\(parameters)".data(using: String.Encoding.utf8) {
                 multipartFormData.append(data, withName: key)
@@ -215,3 +328,6 @@ internal extension IQAPIClient {
     }
     // swiftlint:enable cyclomatic_complexity
 }
+// swiftlint:enable line_length
+// swiftlint:enable identifier_name
+// swiftlint:enable function_parameter_count

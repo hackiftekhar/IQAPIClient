@@ -1,9 +1,9 @@
 {
   "name": "IQAPIClient",
-  "version": "3.0.1",
+  "version": "4.0.0",
   "source": {
     "git": "https://github.com/hackiftekhar/IQAPIClient.git",
-    "tag": "3.0.1"
+    "tag": "4.0.0"
   },
   "summary": "API Client to communicate with the REST API and auto conversion to model classes.",
   "homepage": "https://github.com/hackiftekhar/IQAPIClient",
@@ -12,7 +12,7 @@
     "Iftekhar Qurashi": "hack.iftekhar@gmail.com"
   },
   "platforms": {
-    "ios": "11.0"
+    "ios": "13.0"
   },
   "swift_versions": [
       "5.5",

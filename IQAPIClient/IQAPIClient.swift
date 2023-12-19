@@ -33,7 +33,7 @@ import Alamofire
 
 final public class IQAPIClient: Sendable {
 
-    @frozen public enum Result<Success: Sendable, Failure: Sendable>: Sendable {
+    @frozen public enum Result<Success, Failure>: Sendable where Success: Sendable, Failure: Sendable {
 
         /// A success, storing a `Success` value.
         case success(Success)
@@ -81,42 +81,42 @@ final public class IQAPIClient: Sendable {
 
     /// A error handler block for all errors (It save a lot of code we write at every place to show error),
     /// now implement it and show error message from here, no need to write error alert code everywhere
-    public var commonErrorHandlerBlock: ((URLRequest, Parameters?, Data?, Error) -> Void)?
+    public var commonErrorHandlerBlock: ((_ request: URLRequest, _ parameters: Any?, _ data: Data?, _ error: Error) -> Void)?
 
-/// --------------------------
-///     responseModifierBlock is used to modify the response before any processing.
-///     Let's say we have below structure of all success response:-
-//     {
-//        "status": 200,
-//        "data": {
-//            "id":4,
-//            "name":"Some name"
-//        }
-//     }
-//     In above case, you are only interested in the inner object which is inside data.
-//      So from responseModifierBlock you should return `.success(response["data"])` where data is a [String:Any]
-/// --------------------------
-///    Let's also assume we another structure of success message
-//    {
-//        "status": 200,
-//        "message": "We have successfully sent you an email with instructions to reset your password."
-//     }
-//     In above case, if you are interested in status code also
-//     then you could return the same object you received like `.success(response)`.
-//     Or if you are only interested in "message" and specify returned result type as String like this
-//    `Result<String, FailureModel, Error>)`, then you should return `.success(response["message"])`
-/// --------------------------
-///     Let's also assume we another below structure for failure case
-//     {
-//        "status": 400,
-//        "message": "Something went wrong"
-//     }
-///
-///     In above case, you should return a `.failure(error)` where you construct an error object like below
-//     let error = Error(domain: "Error",
-//                      code: response["status"] as! Int,
-//                      userInfo: [NSLocalizedDescriptionKey:response["message"] as! String])
-//     completionHandler(.failure(error))
+    /// --------------------------
+    ///     responseModifierBlock is used to modify the response before any processing.
+    ///     Let's say we have below structure of all success response:-
+    //     {
+    //        "status": 200,
+    //        "data": {
+    //            "id":4,
+    //            "name":"Some name"
+    //        }
+    //     }
+    //     In above case, you are only interested in the inner object which is inside data.
+    //      So from responseModifierBlock you should return `.success(response["data"])` where data is a [String:Any]
+    /// --------------------------
+    ///    Let's also assume we another structure of success message
+    //    {
+    //        "status": 200,
+    //        "message": "We have successfully sent you an email with instructions to reset your password."
+    //     }
+    //     In above case, if you are interested in status code also
+    //     then you could return the same object you received like `.success(response)`.
+    //     Or if you are only interested in "message" and specify returned result type as String like this
+    //    `Result<String, FailureModel, Error>)`, then you should return `.success(response["message"])`
+    /// --------------------------
+    ///     Let's also assume we another below structure for failure case
+    //     {
+    //        "status": 400,
+    //        "message": "Something went wrong"
+    //     }
+    ///
+    ///     In above case, you should return a `.failure(error)` where you construct an error object like below
+    //     let error = Error(domain: "Error",
+    //                      code: response["status"] as! Int,
+    //                      userInfo: [NSLocalizedDescriptionKey:response["message"] as! String])
+    //     completionHandler(.failure(error))
 
     public var responseModifierBlock: ((AFDataResponse<Data>, Any) -> IQAPIClient.Result<Any, Any>)?
 
@@ -146,4 +146,16 @@ final public class IQAPIClient: Sendable {
                                                                       nan: "NaN")
         return decoder
     }()
+
+    public struct Options: OptionSet, Sendable {
+        public let rawValue: Int
+        public init(rawValue: Int) {
+            self.rawValue = rawValue
+        }
+
+        public static let successSound                  = Self.init(rawValue: 1 << 0)
+        public static let failedSound                   = Self.init(rawValue: 1 << 1)
+        public static let executeErrorHandlerOnError    = Self.init(rawValue: 1 << 2)
+        public static let forceMultipart                = Self.init(rawValue: 1 << 3)
+    }
 }

@@ -1,6 +1,6 @@
 project 'API Client.xcodeproj'
 
-platform :ios, '11.0'
+platform :ios, '13.0'
 use_frameworks!
 
 target 'API Client' do

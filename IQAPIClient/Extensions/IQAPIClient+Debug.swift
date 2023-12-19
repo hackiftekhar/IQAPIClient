@@ -27,87 +27,6 @@ import Alamofire
 
 internal extension IQAPIClient {
 
-    private static let logQueue: DispatchQueue = DispatchQueue(label: "com.iqapiclient.logQueue", qos: .background)
-
-    func printRequestURL(url: URLConvertible, method: HTTPMethod,
-                         headers: HTTPHeaders?, parameters: [String: Any]?, requestNumber: Int) {
-        if debuggingEnabled {
-            Self.logQueue.async {
-                print("\n(\(requestNumber)). Request Start \(method.rawValue): \(url) --------")
-
-                if let headers = headers {
-                    print("(\(requestNumber)). Headers:\(headers)")
-                }
-
-                let parameters = Self.convertFileToPrettyString(parameters: parameters) as? [String: Any]
-
-                if let jsonString = parameters?.prettyJsonString {
-                    print("(\(requestNumber)). \(jsonString)")
-                }
-
-                print("(\(requestNumber)). Request End --------\n")
-            }
-        }
-    }
-
-    func printRequestURL(url: URLConvertible, method: HTTPMethod,
-                         headers: HTTPHeaders?, parameters: Encodable?, requestNumber: Int) {
-        if debuggingEnabled {
-            Self.logQueue.async {
-                print("\n(\(requestNumber)). Request Start \(method.rawValue): \(url) --------")
-
-                if let headers = headers {
-                    print("(\(requestNumber)). Headers:\(headers)")
-                }
-
-                if let parameters = parameters {
-                    let data = try? self.jsonEncoder.encode(parameters)
-                    if let jsonString = data?.prettyJsonString {
-                        print("(\(requestNumber)). \(jsonString)")
-                    }
-                }
-
-                print("(\(requestNumber)). Request End --------\n")
-            }
-        }
-    }
-
-    func printResponse(response: AFDataResponse<Data>, requestNumber: Int) {
-        if debuggingEnabled {
-            Self.logQueue.async {
-                print("\n(\(requestNumber)). Response Start \(response.request?.httpMethod ?? "GET"): \(String(describing: response.request?.url)) --------")
-
-                if let header = response.response {
-                    print("(\(requestNumber)). StatusCode: \(header.statusCode)")
-                    print("(\(requestNumber)). Headers:\(header.allHeaderFields)")
-                }
-
-                switch response.result {
-                case .success(let data):
-
-                    if let jsonString = data.prettyJsonString {
-                        print("(\(requestNumber)). \(jsonString)")
-                    } else if let jsonString = data.string {
-                        print("(\(requestNumber)). \(jsonString)")
-                    } else {
-                        print("(\(requestNumber)). Unable to convert response to string")
-                    }
-                case .failure(let error):
-
-                    if let jsonString = response.data?.string {
-                        print("(\(requestNumber)). \(jsonString)")
-                    }
-
-                    print("(\(requestNumber)). \(error)")
-                }
-
-                print("(\(requestNumber)). Response End --------\n")
-            }
-        }
-    }
-
-#if compiler(>=5.6.0) && canImport(_Concurrency)
-    @available(iOS 13.0.0, *)
     func printRequestURL(url: URLConvertible, method: HTTPMethod,
                          headers: HTTPHeaders?, parameters: [String: Any]?, requestNumber: Int) async {
         if debuggingEnabled {
@@ -127,7 +46,24 @@ internal extension IQAPIClient {
         }
     }
 
-    @available(iOS 13.0.0, *)
+    func printRequestURL(url: URLConvertible, method: HTTPMethod,
+                         headers: HTTPHeaders?, parameters: Encodable?, requestNumber: Int) async {
+        print("\n(\(requestNumber)). Request Start \(method.rawValue): \(url) --------")
+
+        if let headers = headers {
+            print("(\(requestNumber)). Headers:\(headers)")
+        }
+
+        if let parameters = parameters {
+            let data = try? self.jsonEncoder.encode(parameters)
+            if let jsonString = data?.prettyJsonString {
+                print("(\(requestNumber)). \(jsonString)")
+            }
+        }
+
+        print("(\(requestNumber)). Request End --------\n")
+    }
+
     func printResponse(response: AFDataResponse<Data>, requestNumber: Int) async {
         if debuggingEnabled {
             print("\n(\(requestNumber)). Response Start \(response.request?.httpMethod ?? "GET"): \(String(describing: response.request?.url)) --------")
@@ -159,7 +95,6 @@ internal extension IQAPIClient {
             print("(\(requestNumber)). Response End --------\n")
         }
     }
-#endif
 
     private static func convertFileToPrettyString(parameters: Any?) -> Any? {
 
