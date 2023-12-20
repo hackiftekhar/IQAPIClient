@@ -12,7 +12,7 @@ import Alamofire
 extension IQAPIClient {
 
     @discardableResult
-    func colors(completionHandler: @escaping (_ result: Swift.Result<[Color], Error>) -> Void) -> DataRequest {
+    func colors(completionHandler: @escaping @MainActor (_ result: Swift.Result<[Color], Error>) -> Void) -> DataRequest {
         let path = ITAPIPath.colors.rawValue
 
         let request = sendRequest(path: path, completionHandler: completionHandler).validate { _, response, _ in
@@ -28,7 +28,7 @@ extension IQAPIClient {
     }
 
     @discardableResult
-    func color(id: Int, completionHandler: @escaping (_ result: Swift.Result<Color, Error>) -> Void) -> DataRequest {
+    func color(id: Int, completionHandler: @escaping @MainActor (_ result: Swift.Result<Color, Error>) -> Void) -> DataRequest {
         let path = ITAPIPath.colors.rawValue + "/\(id)"
         return sendRequest(path: path, completionHandler: completionHandler)
     }

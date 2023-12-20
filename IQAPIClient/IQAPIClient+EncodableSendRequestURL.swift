@@ -1,12 +1,27 @@
 //
 //  IQAPIClient+EncodableSendRequestURL.swift
-//  IQAPIClient
+//  https://github.com/hackiftekhar/IQAPIClient
 //
-//  Created by Iftekhar on 12/19/23.
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
 //
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
 
 import Foundation
-@preconcurrency import Alamofire
+import Alamofire
 
 // swiftlint:disable line_length
 
@@ -99,33 +114,8 @@ extension IQAPIClient {
                             headers: headers,
                             options: options,
                             completionHandler: { (originalResponse: AFDataResponse, result: IQAPIClient.Result<Success, Failure>) in
-
-            DispatchQueue.main.async { [self, completionHandler, originalResponse, result, parameters] in
-                completionHandler(originalResponse.response ?? HTTPURLResponse(), result)
-                switch result {
-                case .success:
-                    if options.contains(.successSound) {
-                        Self.haptic.prepare()
-                        Self.haptic.notificationOccurred(.success)
-                    }
-                case .failure(let response):
-                    if options.contains(.failedSound) {
-                        Self.haptic.prepare()
-                        Self.haptic.notificationOccurred(.success)
-                    }
-                    if let response = response as? Error, options.contains(.executeErrorHandlerOnError) {
-                        self.commonErrorHandlerBlock?(originalResponse.request!, parameters, originalResponse.data, response)
-                    }
-                case .error(let error):
-                    if options.contains(.failedSound) {
-                        Self.haptic.prepare()
-                        Self.haptic.notificationOccurred(.error)
-                    }
-                    if options.contains(.executeErrorHandlerOnError) {
-                        self.commonErrorHandlerBlock?(originalResponse.request!, parameters, originalResponse.data, error)
-                    }
-                }
-            }
+            
+            completionHandler(originalResponse.response ?? HTTPURLResponse(), result)
         })
     }
 }

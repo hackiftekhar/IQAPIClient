@@ -36,5 +36,209 @@
             landmarkType = "14">
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "4950C2F2-9F68-4296-A5F3-B81C17E8D4FC"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "IQAPIClient/IQAPIClient+Internal.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "268"
+            endingLineNumber = "268"
+            landmarkName = "handleResponse(response:parameters:options:requestNumber:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "4950C2F2-9F68-4296-A5F3-B81C17E8D4FC - a4e680ffba95dd60"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for IQAPIClient.IQAPIClient.handleResponse&lt;&#x3c4;_0_0, &#x3c4;_0_1 where &#x3c4;_0_0: Swift.Sendable, &#x3c4;_0_1: Swift.Sendable&gt;(response: Alamofire.DataResponse&lt;Foundation.Data, Alamofire.AFError&gt;, parameters: Swift.Optional&lt;Any&gt;, options: IQAPIClient.IQAPIClient.Options, requestNumber: Swift.Int) async -&gt; IQAPIClient.IQAPIClient.Result&lt;&#x3c4;_0_0, &#x3c4;_0_1&gt;"
+                  moduleName = "IQAPIClient"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/iftekhar/Projects/Projects/Github/API%20Client/IQAPIClient/IQAPIClient+Internal.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "268"
+                  endingLineNumber = "268"
+                  offsetFromSymbolStart = "106">
+               </Location>
+               <Location
+                  uuid = "4950C2F2-9F68-4296-A5F3-B81C17E8D4FC - 161c559a8fa18363"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(4) suspend resume partial function for IQAPIClient.IQAPIClient.handleResponse&lt;&#x3c4;_0_0, &#x3c4;_0_1 where &#x3c4;_0_0: Swift.Sendable, &#x3c4;_0_1: Swift.Sendable&gt;(response: Alamofire.DataResponse&lt;Foundation.Data, Alamofire.AFError&gt;, parameters: Swift.Optional&lt;Any&gt;, options: IQAPIClient.IQAPIClient.Options, requestNumber: Swift.Int) async -&gt; IQAPIClient.IQAPIClient.Result&lt;&#x3c4;_0_0, &#x3c4;_0_1&gt;"
+                  moduleName = "IQAPIClient"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/iftekhar/Projects/Projects/Github/API%20Client/IQAPIClient/IQAPIClient+Internal.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "268"
+                  endingLineNumber = "268"
+                  offsetFromSymbolStart = "22">
+               </Location>
+               <Location
+                  uuid = "4950C2F2-9F68-4296-A5F3-B81C17E8D4FC - f84a6ea180bd6162"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(5) suspend resume partial function for IQAPIClient.IQAPIClient.handleResponse&lt;&#x3c4;_0_0, &#x3c4;_0_1 where &#x3c4;_0_0: Swift.Sendable, &#x3c4;_0_1: Swift.Sendable&gt;(response: Alamofire.DataResponse&lt;Foundation.Data, Alamofire.AFError&gt;, parameters: Swift.Optional&lt;Any&gt;, options: IQAPIClient.IQAPIClient.Options, requestNumber: Swift.Int) async -&gt; IQAPIClient.IQAPIClient.Result&lt;&#x3c4;_0_0, &#x3c4;_0_1&gt;"
+                  moduleName = "IQAPIClient"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/iftekhar/Projects/Projects/Github/API%20Client/IQAPIClient/IQAPIClient+Internal.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "268"
+                  endingLineNumber = "268"
+                  offsetFromSymbolStart = "83">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "0EE2496B-8259-40D9-844D-E9D9E24DED1D"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "IQAPIClient/IQAPIClient+Internal.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "290"
+            endingLineNumber = "290"
+            landmarkName = "handleResponse(response:parameters:options:requestNumber:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "0EE2496B-8259-40D9-844D-E9D9E24DED1D - 4172da35acee9c4c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) suspend resume partial function for IQAPIClient.IQAPIClient.handleResponse&lt;&#x3c4;_0_0, &#x3c4;_0_1 where &#x3c4;_0_0: Swift.Sendable, &#x3c4;_0_1: Swift.Sendable&gt;(response: Alamofire.DataResponse&lt;Foundation.Data, Alamofire.AFError&gt;, parameters: Swift.Optional&lt;Any&gt;, options: IQAPIClient.IQAPIClient.Options, requestNumber: Swift.Int) async -&gt; IQAPIClient.IQAPIClient.Result&lt;&#x3c4;_0_0, &#x3c4;_0_1&gt;"
+                  moduleName = "IQAPIClient"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/iftekhar/Projects/Projects/Github/API%20Client/IQAPIClient/IQAPIClient+Internal.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "290"
+                  endingLineNumber = "290"
+                  offsetFromSymbolStart = "5348">
+               </Location>
+               <Location
+                  uuid = "0EE2496B-8259-40D9-844D-E9D9E24DED1D - f84a6ea180bd6448"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(5) suspend resume partial function for IQAPIClient.IQAPIClient.handleResponse&lt;&#x3c4;_0_0, &#x3c4;_0_1 where &#x3c4;_0_0: Swift.Sendable, &#x3c4;_0_1: Swift.Sendable&gt;(response: Alamofire.DataResponse&lt;Foundation.Data, Alamofire.AFError&gt;, parameters: Swift.Optional&lt;Any&gt;, options: IQAPIClient.IQAPIClient.Options, requestNumber: Swift.Int) async -&gt; IQAPIClient.IQAPIClient.Result&lt;&#x3c4;_0_0, &#x3c4;_0_1&gt;"
+                  moduleName = "IQAPIClient"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/iftekhar/Projects/Projects/Github/API%20Client/IQAPIClient/IQAPIClient+Internal.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "290"
+                  endingLineNumber = "290"
+                  offsetFromSymbolStart = "449">
+               </Location>
+               <Location
+                  uuid = "0EE2496B-8259-40D9-844D-E9D9E24DED1D - 3323bdddf40bec44"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(9) suspend resume partial function for IQAPIClient.IQAPIClient.handleResponse&lt;&#x3c4;_0_0, &#x3c4;_0_1 where &#x3c4;_0_0: Swift.Sendable, &#x3c4;_0_1: Swift.Sendable&gt;(response: Alamofire.DataResponse&lt;Foundation.Data, Alamofire.AFError&gt;, parameters: Swift.Optional&lt;Any&gt;, options: IQAPIClient.IQAPIClient.Options, requestNumber: Swift.Int) async -&gt; IQAPIClient.IQAPIClient.Result&lt;&#x3c4;_0_0, &#x3c4;_0_1&gt;"
+                  moduleName = "IQAPIClient"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/iftekhar/Projects/Projects/Github/API%20Client/IQAPIClient/IQAPIClient+Internal.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "290"
+                  endingLineNumber = "290"
+                  offsetFromSymbolStart = "1871">
+               </Location>
+               <Location
+                  uuid = "0EE2496B-8259-40D9-844D-E9D9E24DED1D - 6180762832242cf1"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(13) suspend resume partial function for IQAPIClient.IQAPIClient.handleResponse&lt;&#x3c4;_0_0, &#x3c4;_0_1 where &#x3c4;_0_0: Swift.Sendable, &#x3c4;_0_1: Swift.Sendable&gt;(response: Alamofire.DataResponse&lt;Foundation.Data, Alamofire.AFError&gt;, parameters: Swift.Optional&lt;Any&gt;, options: IQAPIClient.IQAPIClient.Options, requestNumber: Swift.Int) async -&gt; IQAPIClient.IQAPIClient.Result&lt;&#x3c4;_0_0, &#x3c4;_0_1&gt;"
+                  moduleName = "IQAPIClient"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/iftekhar/Projects/Projects/Github/API%20Client/IQAPIClient/IQAPIClient+Internal.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "290"
+                  endingLineNumber = "290"
+                  offsetFromSymbolStart = "1414">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "B69E0441-C33C-4D21-B56E-41FE8D7A66BF"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "IQAPIClient/IQAPIClient+Internal.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "267"
+            endingLineNumber = "267"
+            landmarkName = "handleResponse(response:parameters:options:requestNumber:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "B69E0441-C33C-4D21-B56E-41FE8D7A66BF - 4172da35acee9947"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) suspend resume partial function for IQAPIClient.IQAPIClient.handleResponse&lt;&#x3c4;_0_0, &#x3c4;_0_1 where &#x3c4;_0_0: Swift.Sendable, &#x3c4;_0_1: Swift.Sendable&gt;(response: Alamofire.DataResponse&lt;Foundation.Data, Alamofire.AFError&gt;, parameters: Swift.Optional&lt;Any&gt;, options: IQAPIClient.IQAPIClient.Options, requestNumber: Swift.Int) async -&gt; IQAPIClient.IQAPIClient.Result&lt;&#x3c4;_0_0, &#x3c4;_0_1&gt;"
+                  moduleName = "IQAPIClient"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/iftekhar/Projects/Projects/Github/API%20Client/IQAPIClient/IQAPIClient+Internal.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "267"
+                  endingLineNumber = "267"
+                  offsetFromSymbolStart = "1602">
+               </Location>
+               <Location
+                  uuid = "B69E0441-C33C-4D21-B56E-41FE8D7A66BF - 32a8efd0a1fa7f40"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(2) suspend resume partial function for IQAPIClient.IQAPIClient.handleResponse&lt;&#x3c4;_0_0, &#x3c4;_0_1 where &#x3c4;_0_0: Swift.Sendable, &#x3c4;_0_1: Swift.Sendable&gt;(response: Alamofire.DataResponse&lt;Foundation.Data, Alamofire.AFError&gt;, parameters: Swift.Optional&lt;Any&gt;, options: IQAPIClient.IQAPIClient.Options, requestNumber: Swift.Int) async -&gt; IQAPIClient.IQAPIClient.Result&lt;&#x3c4;_0_0, &#x3c4;_0_1&gt;"
+                  moduleName = "IQAPIClient"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/iftekhar/Projects/Projects/Github/API%20Client/IQAPIClient/IQAPIClient+Internal.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "267"
+                  endingLineNumber = "267"
+                  offsetFromSymbolStart = "19">
+               </Location>
+               <Location
+                  uuid = "B69E0441-C33C-4D21-B56E-41FE8D7A66BF - a4e680ffba95dd41"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for IQAPIClient.IQAPIClient.handleResponse&lt;&#x3c4;_0_0, &#x3c4;_0_1 where &#x3c4;_0_0: Swift.Sendable, &#x3c4;_0_1: Swift.Sendable&gt;(response: Alamofire.DataResponse&lt;Foundation.Data, Alamofire.AFError&gt;, parameters: Swift.Optional&lt;Any&gt;, options: IQAPIClient.IQAPIClient.Options, requestNumber: Swift.Int) async -&gt; IQAPIClient.IQAPIClient.Result&lt;&#x3c4;_0_0, &#x3c4;_0_1&gt;"
+                  moduleName = "IQAPIClient"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/iftekhar/Projects/Projects/Github/API%20Client/IQAPIClient/IQAPIClient+Internal.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "267"
+                  endingLineNumber = "267"
+                  offsetFromSymbolStart = "22">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

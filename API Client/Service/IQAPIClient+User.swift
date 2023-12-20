@@ -23,13 +23,9 @@ extension IQAPIClient {
         return sendRequest(path: path, completionHandler: completionHandler)
     }
 
-#if compiler(>=5.6.0) && canImport(_Concurrency)
-
     @available(iOS 13, *)
     func asyncAwaitUsers() async throws -> [User] {
         let path = ITAPIPath.users.rawValue
-        return try await sendRequest(path: path)
+        return try await sendRequest(path: path, options: [.successSound, .failedSound]).result
     }
-
-#endif
 }

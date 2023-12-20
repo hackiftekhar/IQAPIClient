@@ -20,7 +20,7 @@
 //  THE SOFTWARE.
 
 import Foundation
-@preconcurrency import Alamofire
+import Alamofire
 
 /*
  These 4 types of completion blocks supported

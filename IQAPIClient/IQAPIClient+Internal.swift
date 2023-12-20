@@ -40,8 +40,8 @@ internal extension IQAPIClient {
                                                            encoding: ParameterEncoding?,
                                                            headers: HTTPHeaders?,
                                                            options: Options,
-                                                           completionHandler: @Sendable @escaping (_ originalResponse: AFDataResponse<Data>, _ result: IQAPIClient.Result<Success, Failure>) -> Void) -> DataRequest
-        where Success: Sendable, Failure: Sendable {
+                                                           completionHandler: @Sendable @escaping @MainActor (_ originalResponse: AFDataResponse<Data>, _ result: IQAPIClient.Result<Success, Failure>) -> Void) -> DataRequest
+    where Success: Sendable, Failure: Sendable {
 
         guard Success.Type.self != Failure.Type.self else {
             fatalError("Success \(Success.self) and Failure \(Failure.self) must not be of same type")
@@ -51,7 +51,7 @@ internal extension IQAPIClient {
         Task.detached(priority: .utility) {
             let response = await request.serializingData().response
 
-            let result: IQAPIClient.Result<Success, Failure> = self.handleResponse(response: response, requestNumber: requestNumber)
+            let result: IQAPIClient.Result<Success, Failure> = await self.handleResponse(response: response, parameters: parameters, options: options, requestNumber: requestNumber)
             switch result {
             case .success, .failure:
                 return (request, result)
@@ -68,8 +68,8 @@ internal extension IQAPIClient {
                                                                        encoder: ParameterEncoder?,
                                                                        headers: HTTPHeaders?,
                                                                        options: Options,
-                                                                       completionHandler: @Sendable @escaping (_ originalResponse: AFDataResponse<Data>, _ result: IQAPIClient.Result<Success, Failure>) -> Void) -> DataRequest
-        where Success: Sendable, Failure: Sendable, Parameters: Encodable {
+                                                                       completionHandler: @Sendable @escaping @MainActor (_ originalResponse: AFDataResponse<Data>, _ result: IQAPIClient.Result<Success, Failure>) -> Void) -> DataRequest
+    where Success: Sendable, Failure: Sendable, Parameters: Encodable {
 
         guard Success.Type.self != Failure.Type.self else {
             fatalError("Success \(Success.self) and Failure \(Failure.self) must not be of same type")
@@ -79,7 +79,7 @@ internal extension IQAPIClient {
         Task.detached(priority: .utility) {
             let response = await request.serializingData().response
 
-            let result: IQAPIClient.Result<Success, Failure> = self.handleResponse(response: response, requestNumber: requestNumber)
+            let result: IQAPIClient.Result<Success, Failure> = await self.handleResponse(response: response, parameters: parameters, options: options, requestNumber: requestNumber)
             switch result {
             case .success, .failure:
                 return (request, result)
@@ -108,7 +108,8 @@ internal extension IQAPIClient {
         let (request, requestNumber) = newRequest(url: url, method: method, parameters: parameters, encoding: encoding, headers: headers, options: options)
         let response = await request.serializingData().response
 
-        let result: IQAPIClient.Result<Success, Failure> = handleResponse(response: response, requestNumber: requestNumber)
+        let result: IQAPIClient.Result<Success, Failure> = await handleResponse(response: response, parameters: parameters, options: options, requestNumber: requestNumber)
+
         switch result {
         case .success, .failure:
             return (response, result)
@@ -122,8 +123,8 @@ internal extension IQAPIClient {
                                                     parameters: Parameters?,
                                                     encoder: ParameterEncoder?,
                                                     headers: HTTPHeaders?,
-                                                    options: Options) async throws -> (request: DataRequest, result: IQAPIClient.Result<Success, Failure>)
-        where Success: Sendable, Failure: Sendable, Parameters: Encodable {
+                                                    options: Options) async throws -> (response: DataResponse<Data, AFError>, result: IQAPIClient.Result<Success, Failure>)
+    where Success: Sendable, Failure: Sendable, Parameters: Encodable {
 
         guard Success.Type.self != Failure.Type.self else {
             fatalError("Success \(Success.self) and Failure \(Failure.self) must not be of same type")
@@ -132,10 +133,10 @@ internal extension IQAPIClient {
         let (request, requestNumber) = newRequest(url: url, method: method, parameters: parameters, encoder: encoder, headers: headers, options: options)
         let response = await request.serializingData().response
 
-        let result: IQAPIClient.Result<Success, Failure> = handleResponse(response: response, requestNumber: requestNumber)
+        let result: IQAPIClient.Result<Success, Failure> = await handleResponse(response: response, parameters: parameters, options: options, requestNumber: requestNumber)
         switch result {
         case .success, .failure:
-            return (request, result)
+            return (response, result)
         case .error(let error):
             throw error
         }
@@ -168,7 +169,7 @@ private extension IQAPIClient {
         let requestNumber = RequestCounter.counter
         Task.detached(priority: .utility) { [httpHeaders] in
             await self.printRequestURL(url: url, method: method, headers: httpHeaders,
-                                  parameters: parameters, requestNumber: requestNumber)
+                                       parameters: parameters, requestNumber: requestNumber)
         }
 
         let isMultipart = Self.containsAnyFile(parameters: parameters)
@@ -218,7 +219,7 @@ private extension IQAPIClient {
         let requestNumber = RequestCounter.counter
         Task.detached(priority: .utility) { [httpHeaders] in
             await self.printRequestURL(url: url, method: method, headers: httpHeaders,
-                                  parameters: parameters, requestNumber: requestNumber)
+                                       parameters: parameters, requestNumber: requestNumber)
         }
 
         let isMultipart = Self.containsAnyFile(parameters: parameters)
@@ -245,19 +246,48 @@ private extension IQAPIClient {
         return (request, requestNumber)
     }
 
-    func handleResponse<Success, Failure>(response: AFDataResponse<Data>,
-                                          requestNumber: Int) -> IQAPIClient.Result<Success, Failure>
+    func handleResponse<Success, Failure>(response: AFDataResponse<Data>, parameters: Any?, options: Options,
+                                          requestNumber: Int) async -> IQAPIClient.Result<Success, Failure>
     where Success: Sendable, Failure: Sendable {
         Task.detached(priority: .utility) {
             await self.printResponse(response: response, requestNumber: requestNumber)
         }
 
+        let result: IQAPIClient.Result<Success, Failure>
         switch response.result {
         case .success(let data):    /// Successfully got data response from server
-            return intercept(response: response, data: data)
+            result = intercept(response: response, data: data)
         case .failure(let error):   /// Error from the Alamofire
-            return .error(error)
+            result = .error(error)
         }
+
+        switch result {
+        case .success:
+            if options.contains(.successSound) {
+                await Self.haptic.prepare()
+                await Self.haptic.notificationOccurred(.success)
+            }
+        case .failure(let failure):
+            if options.contains(.failedSound) {
+                await Self.haptic.prepare()
+                await Self.haptic.notificationOccurred(.success)
+            }
+
+            if options.contains(.executeErrorHandlerOnError), let failure = failure as? Error {
+                commonErrorHandlerBlock?(response.request!, parameters, response.data, failure)
+            }
+        case .error(let error):
+            if options.contains(.failedSound) {
+                await Self.haptic.prepare()
+                await Self.haptic.notificationOccurred(.error)
+            }
+
+            if options.contains(.executeErrorHandlerOnError) {
+                commonErrorHandlerBlock?(response.request!, parameters, response.data, error)
+            }
+        }
+
+        return result
     }
 
     static func containsAnyFile(parameters: Any?) -> Bool {

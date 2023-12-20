@@ -53,18 +53,14 @@ final public class IQAPIClient: Sendable {
 
         var rootQueueName: String = "com.iqapiclient.rootQueue"
         var serializationQueueName: String = "com.iqapiclient.serializationQueue"
-        var responseQueueName: String = "com.iqapiclient.responseQueue"
         if let baseURL = baseURL {
             rootQueueName += "_\(baseURL.absoluteString)"
             serializationQueueName += "_\(baseURL.absoluteString)"
-            responseQueueName += "_\(baseURL.absoluteString)"
         }
 
         session = Session(rootQueue: DispatchQueue(label: rootQueueName),
                           serializationQueue: DispatchQueue(label: serializationQueueName,
                                                             attributes: .concurrent))
-        responseQueue = DispatchQueue(label: responseQueueName,
-                                      attributes: .concurrent)
     }
 
     /// Base URL of the API
@@ -72,7 +68,6 @@ final public class IQAPIClient: Sendable {
 
     /// Alamofire Setup
     public var session: Session
-    internal let responseQueue: DispatchQueue
 
     /// Some customized error messages on errors
     public var malformedResponseErrorMessage = "Looks like we received malformed response from our server."
