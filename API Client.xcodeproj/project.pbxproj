@@ -3,12 +3,13 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		04B8BCCF84ECF930C285889F /* Pods_API_Client.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA3FED2F1F3F463B625FEDC9 /* Pods_API_Client.framework */; };
 		C00792E325C853C500EFCD5F /* UsersRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00792E225C853C500EFCD5F /* UsersRequest.swift */; };
+		C03F067F2B3B2334008CCBEA /* ErrorResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C03F067E2B3B2334008CCBEA /* ErrorResponse.swift */; };
 		C0B6B0E8250A291400AB1ED9 /* IQAPIClient+User.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B6B0E7250A291400AB1ED9 /* IQAPIClient+User.swift */; };
 		C0B84295250A2F29003493F7 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B84294250A2F29003493F7 /* User.swift */; };
 		C0BD23722508F551003DD9D1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BD23712508F551003DD9D1 /* AppDelegate.swift */; };
@@ -33,6 +34,7 @@
 		281781CA723A223CB1FE086C /* Pods-API Client.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-API Client.release.xcconfig"; path = "Target Support Files/Pods-API Client/Pods-API Client.release.xcconfig"; sourceTree = "<group>"; };
 		AA3FED2F1F3F463B625FEDC9 /* Pods_API_Client.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_API_Client.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C00792E225C853C500EFCD5F /* UsersRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersRequest.swift; sourceTree = "<group>"; };
+		C03F067E2B3B2334008CCBEA /* ErrorResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorResponse.swift; sourceTree = "<group>"; };
 		C0B6B0E7250A291400AB1ED9 /* IQAPIClient+User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "IQAPIClient+User.swift"; sourceTree = "<group>"; };
 		C0B84294250A2F29003493F7 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		C0BD236E2508F551003DD9D1 /* API Client.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "API Client.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -93,6 +95,7 @@
 			children = (
 				C0B84294250A2F29003493F7 /* User.swift */,
 				C0D7322225CD3F74001C1302 /* Color.swift */,
+				C03F067E2B3B2334008CCBEA /* ErrorResponse.swift */,
 				C00792E225C853C500EFCD5F /* UsersRequest.swift */,
 			);
 			path = Model;
@@ -317,6 +320,7 @@
 				C0D7322325CD3F74001C1302 /* Color.swift in Sources */,
 				C0BD23892508FBB5003DD9D1 /* IQAPIClient+APIPath.swift in Sources */,
 				C0BD23762508F551003DD9D1 /* UsersViewController.swift in Sources */,
+				C03F067F2B3B2334008CCBEA /* ErrorResponse.swift in Sources */,
 				C0D7323F25CD48A8001C1302 /* ColorCell.swift in Sources */,
 				C0B84295250A2F29003493F7 /* User.swift in Sources */,
 				C0D7325225CD8578001C1302 /* UIColor+Extension.swift in Sources */,

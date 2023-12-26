@@ -48,7 +48,7 @@ internal extension IQAPIClient {
         }
 
         let (request, requestNumber) = newRequest(url: url, method: method, parameters: parameters, encoding: encoding, headers: headers, options: options)
-        Task.detached(priority: .utility) {
+        Task.detached(priority: .background) {
             let response = await request.serializingData().response
 
             let result: IQAPIClient.Result<Success, Failure> = await self.handleResponse(response: response, parameters: parameters, options: options, requestNumber: requestNumber)
@@ -76,7 +76,7 @@ internal extension IQAPIClient {
         }
 
         let (request, requestNumber) = newRequest(url: url, method: method, parameters: parameters, encoder: encoder, headers: headers, options: options)
-        Task.detached(priority: .utility) {
+        Task.detached(priority: .background) {
             let response = await request.serializingData().response
 
             let result: IQAPIClient.Result<Success, Failure> = await self.handleResponse(response: response, parameters: parameters, options: options, requestNumber: requestNumber)

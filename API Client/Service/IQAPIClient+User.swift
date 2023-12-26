@@ -18,7 +18,7 @@ extension IQAPIClient {
     }
 
     @discardableResult
-    func user(id: Int, completionHandler: @Sendable @escaping @MainActor (_ result: Swift.Result<User, Error>) -> Void) -> DataRequest {
+    func user(id: Int, completionHandler: @Sendable @escaping @MainActor (_ result: IQAPIClient.Result<User, ErrorResponse>) -> Void) -> DataRequest {
         let path = ITAPIPath.users.rawValue + "/\(id)"
         return sendRequest(path: path, completionHandler: completionHandler)
     }
@@ -26,6 +26,12 @@ extension IQAPIClient {
     @available(iOS 13, *)
     func asyncAwaitUsers() async throws -> [User] {
         let path = ITAPIPath.users.rawValue
+        return try await sendRequest(path: path, options: [.successSound, .failedSound]).result
+    }
+
+    @available(iOS 13, *)
+    func asyncAwaituser(id: Int) async throws -> User {
+        let path = ITAPIPath.users.rawValue + "/\(id)"
         return try await sendRequest(path: path, options: [.successSound, .failedSound]).result
     }
 }
