@@ -18,7 +18,7 @@ import Foundation
  },
  */
 
-struct Color: Decodable, Hashable {
+struct Color: Decodable, Hashable, Sendable {
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)

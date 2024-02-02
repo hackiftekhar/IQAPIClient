@@ -52,12 +52,7 @@ internal extension IQAPIClient {
             let response = await request.serializingData().response
 
             let result: IQAPIClient.Result<Success, Failure> = await self.handleResponse(response: response, parameters: parameters, options: options, requestNumber: requestNumber)
-            switch result {
-            case .success, .failure:
-                return (request, result)
-            case .error(let error):
-                throw error
-            }
+            await completionHandler(response, result)
         }
         return request
     }
@@ -80,12 +75,7 @@ internal extension IQAPIClient {
             let response = await request.serializingData().response
 
             let result: IQAPIClient.Result<Success, Failure> = await self.handleResponse(response: response, parameters: parameters, options: options, requestNumber: requestNumber)
-            switch result {
-            case .success, .failure:
-                return (request, result)
-            case .error(let error):
-                throw error
-            }
+            await completionHandler(response, result)
         }
         return request
     }

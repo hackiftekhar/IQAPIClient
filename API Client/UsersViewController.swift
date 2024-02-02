@@ -39,21 +39,21 @@ class UsersViewController: UITableViewController {
         activityIndicator.startAnimating()
         refreshButton.isEnabled = false
 
-        if #available(iOS 13.0, *) {
-            Task(priority: .background, operation: {
-                do {
-                    let users = try await IQAPIClient.default.asyncAwaitUsers()
-                    self.users = users
-                    self.refreshUI()
-                    self.activityIndicator.stopAnimating()
-                    self.refreshButton.isEnabled = true
-                } catch {
-                    print(error)
-                    self.activityIndicator.stopAnimating()
-                    self.refreshButton.isEnabled = true
-                }
-            })
-        } else {
+//        if #available(iOS 13.0, *) {
+//            Task(priority: .background, operation: {
+//                do {
+//                    let users = try await IQAPIClient.default.asyncAwaitUsers()
+//                    self.users = users
+//                    self.refreshUI()
+//                    self.activityIndicator.stopAnimating()
+//                    self.refreshButton.isEnabled = true
+//                } catch {
+//                    print(error)
+//                    self.activityIndicator.stopAnimating()
+//                    self.refreshButton.isEnabled = true
+//                }
+//            })
+//        } else {
             IQAPIClient.default.users { result in
 
                 self.activityIndicator.stopAnimating()
@@ -67,7 +67,7 @@ class UsersViewController: UITableViewController {
                     print(error)
                 }
             }
-        }
+//        }
     }
 
     @IBAction func clear(_ sender: UIBarButtonItem) {

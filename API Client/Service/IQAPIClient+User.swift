@@ -23,15 +23,15 @@ extension IQAPIClient {
         return sendRequest(path: path, completionHandler: completionHandler)
     }
 
-    @available(iOS 13, *)
-    func asyncAwaitUsers() async throws -> [User] {
-        let path = ITAPIPath.users.rawValue
-        return try await sendRequest(path: path, options: [.successSound, .failedSound]).result
-    }
-
-    @available(iOS 13, *)
-    func asyncAwaituser(id: Int) async throws -> User {
-        let path = ITAPIPath.users.rawValue + "/\(id)"
-        return try await sendRequest(path: path, options: [.successSound, .failedSound]).result
-    }
+//    @available(iOS 13, *)
+//    func asyncAwaitUsers() async throws -> [User] {
+//        let path = ITAPIPath.users.rawValue
+//        return try await sendRequest(path: path, options: [.successSound, .failedSound]).result
+//    }
+//
+//    @available(iOS 13, *)
+//    func asyncAwaituser(id: Int) async throws -> User {
+//        let path = ITAPIPath.users.rawValue + "/\(id)"
+//        return try await sendRequest(path: path, options: [.successSound, .failedSound]).result
+//    }
 }

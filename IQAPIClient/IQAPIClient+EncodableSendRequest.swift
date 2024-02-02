@@ -120,7 +120,6 @@ extension IQAPIClient {
                             headers: headers,
                             options: options,
                             completionHandler: { (originalResponse: AFDataResponse, result: IQAPIClient.Result<Success, Failure>) in
-            
             completionHandler(originalResponse.response ?? HTTPURLResponse(), result)
         })
     }

@@ -42,18 +42,34 @@ class UserViewController: UITableViewController {
 
         activityIndicator.startAnimating()
 
-        IQAPIClient.default.user(id: user.id) { [weak self] (result) in
+//        if #available(iOS 13.0, *) {
+//            Task(priority: .background, operation: {
+//                do {
+//                    let user = try await IQAPIClient.default.asyncAwaituser(id: user.id)
+//                    self.user = user
+//                    self.refreshUI()
+//                    self.activityIndicator.stopAnimating()
+//                } catch {
+//                    print(error)
+//                    self.activityIndicator.stopAnimating()
+//                }
+//            })
+//        } else {
+            IQAPIClient.default.user(id: user.id) { result in
 
-            self?.activityIndicator.stopAnimating()
+                self.activityIndicator.stopAnimating()
 
-            switch result {
-            case .success(let user):
-                self?.user = user
-                self?.refreshUI()
-            case .failure:
-                break
+                switch result {
+                case .success(let user):
+                    self.user = user
+                    self.refreshUI()
+                case .failure(let failure):
+                    print(failure)
+                case .error(let error):
+                    print(error)
+                }
             }
-        }
+//        }
     }
 
     func refreshUI() {
