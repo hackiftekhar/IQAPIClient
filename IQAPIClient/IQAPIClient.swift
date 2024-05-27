@@ -21,6 +21,10 @@
 //  THE SOFTWARE.
 import Alamofire
 
+#if canImport(UIKit)
+import UIKit
+#endif
+
 // If you would like to convert your JSON responses to model online,
 // then you could try these sites
 // https://jsonmaster.github.io
@@ -117,8 +121,10 @@ final public class IQAPIClient: Sendable {
 
     public var httpHeaders = HTTPHeaders()
 
+#if canImport(UIKit)
     @MainActor
     internal static let haptic = UINotificationFeedbackGenerator()
+#endif
 
     public var jsonDecoder: JSONDecoder = {
         let decoder = JSONDecoder()

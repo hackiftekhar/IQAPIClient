@@ -8,7 +8,7 @@ PODS:
   - DifferenceKit/Core (1.3.0)
   - DifferenceKit/UIKitExtension (1.3.0):
     - DifferenceKit/Core
-  - IQAPIClient (4.0.0):
+  - IQAPIClient (4.0.3):
     - Alamofire (~> 5)
   - IQListKit (3.0.0):
     - DiffableDataSources (~> 0.4.0)
@@ -41,11 +41,11 @@ SPEC CHECKSUMS:
   AlamofireImage: 843953fa97bee5f561cf05d83abd759e590b068d
   DiffableDataSources: 80396cec405c9b29e1e07b55c9be7d11b46c8741
   DifferenceKit: ab185c4d7f9cef8af3fcf593e5b387fb81e999ca
-  IQAPIClient: 395f9b088fe16b803d67280acdea7c7ec71a73b9
+  IQAPIClient: ac3d16c0871bcf7b10403513c2a477662898474b
   IQListKit: 91f14441e5cd7e74fefbedf6c62ff668e65a44da
   SwiftLint: c1de071d9d08c8aba837545f6254315bc900e211
   SwiftTryCatch: fb6d2b34abe48efd69578dac919293a44f95b481
 
 PODFILE CHECKSUM: ffcfda488fb30e583413486efcff18d441a7f868
 
-COCOAPODS: 1.13.0
+COCOAPODS: 1.15.2
