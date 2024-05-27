@@ -1,9 +1,9 @@
 {
   "name": "IQAPIClient",
-  "version": "4.0.2",
+  "version": "4.0.3",
   "source": {
     "git": "https://github.com/hackiftekhar/IQAPIClient.git",
-    "tag": "4.0.2"
+    "tag": "4.0.3"
   },
   "summary": "API Client to communicate with the REST API and auto conversion to model classes.",
   "homepage": "https://github.com/hackiftekhar/IQAPIClient",
@@ -25,7 +25,7 @@
       "5.9"
   ],
   "source_files": "IQAPIClient/**/*.{swift}",
-  "resources": "IQAPIClient/PrivacyInfo.xcprivacy",
+  "resource_bundles": {"IQAPIClient": "IQAPIClient/PrivacyInfo.xcprivacy"},
   "frameworks": [
     "Foundation"
   ],
